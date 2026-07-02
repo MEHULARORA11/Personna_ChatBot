@@ -4,7 +4,7 @@ import {OpenAI} from 'openai'
 import dotenv from 'dotenv'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import {weatherAgent,emailAgent} from './agenticTools.ts'
+import {weatherAgent,emailAgent,youtubeVideoSearchingAgent,youtubePlaylistSearchingAgent} from './agenticTools.ts'
 import {mainAgentInstruction} from './instruction.ts'
 
 const client = new OpenAI()
@@ -33,7 +33,15 @@ const hiteshAgent = new Agent({
     emailAgent.asTool({
         toolName:'emailAgent',
         toolDescription:`This Tool helps in sending emails`
-    })
+    }),
+    youtubeVideoSearchingAgent.asTool({
+        toolName:'youtubeVideoSearchingAgent',
+        toolDescription:`This tool will help the user to fetch youtube videos of hitesh and piyush`
+    }),
+    youtubePlaylistSearchingAgent.asTool({
+        toolName:'youtubePlaylistSearchingAgent',
+        toolDescription:`This tool will help the user to fetch youtube playlist of hitesh and piyush`
+    }),
 ]
 })
 
