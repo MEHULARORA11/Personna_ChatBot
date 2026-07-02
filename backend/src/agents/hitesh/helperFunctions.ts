@@ -10,7 +10,7 @@ dotenv.config({ path: resolve(__dirname, '../../../.env') })
 const API_KEY = process.env.YOUTUBE_API_KEY;
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function searchVideos(q: string,videos: number = 1,channelId?: string) { // optional parameter at the end
+export async function searchVideos(q: string,videos: number,channelId?: string) { // optional parameter at the end
 
   const params: any = {
     part: "snippet",
@@ -31,6 +31,30 @@ export async function searchVideos(q: string,videos: number = 1,channelId?: stri
   const {data} = response;
 
   return data['items'].map((obj:any,i:number) => `https://www.youtube.com/watch?v=${obj['id']['videoId']}`)
+
+}
+
+export async function searchPlaylists(q: string,playlists: number,channelId?: string) { // optional parameter at the end
+
+  const params: any = {
+    part: "snippet",
+    q,
+    type: "playlist",
+    maxResults: playlists,
+    key: API_KEY,
+  };
+
+  // only add channelId if provided
+  if (channelId?.trim()) {
+    params.channelId = channelId;
+  }
+
+  const response = await axios.get(
+    "https://www.googleapis.com/youtube/v3/search",{ params });
+
+  const {data} = response;
+
+  return data['items'].map((obj:any,i:number) => `https://www.youtube.com/playlist?list=${obj['id']['playlistId']}`)
 
 }
 
@@ -108,3 +132,4 @@ export const sendEmailToMehul = async (name:string, email:string, message:string
     }
   }
 };
+
