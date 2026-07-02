@@ -1,8 +1,16 @@
 import {Agent} from '@openai/agents'
-import {z} from 'zod'
-import axios from 'axios'
-import {weatherTool,sendEmailToUserTool,youtubeVideoSearchingTool} from './subTools.ts'
-import {weatherAgentInstruction,emailAgentInstruction,youtubeVideoSearchingAgentInstruction} from './instruction.ts'
+import{
+    weatherTool,
+    sendEmailToUserTool,
+    youtubeVideoSearchingTool,
+    youtubePlaylistSearchingTool
+} from './subTools.ts'
+import {
+weatherAgentInstruction,
+emailAgentInstruction,
+youtubeVideoSearchingAgentInstruction,
+youtubePlaylistSearchingAgentInstruction
+} from './instruction.ts'
 
 const model = 'gpt-4o-mini'
 
@@ -27,4 +35,10 @@ export const youtubeVideoSearchingAgent = new Agent({
     instructions:youtubeVideoSearchingAgentInstruction,
     model,
     tools:[youtubeVideoSearchingTool]
+})
+export const youtubePlaylistSearchingAgent = new Agent({
+    name:'youtubeVideoSearchingAgent',
+    instructions:youtubePlaylistSearchingAgentInstruction,
+    model,
+    tools:[youtubePlaylistSearchingTool]
 })
