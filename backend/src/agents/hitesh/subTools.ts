@@ -1,15 +1,34 @@
 import {tool} from '@openai/agents'
 import {z} from 'zod'
 import axios from 'axios'
-import {Resend} from 'resend'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import dotenv from 'dotenv'
+import {sendEmailToMehul,searchVideos} from './helperFunctions.ts'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 dotenv.config({ path: resolve(__dirname, '../../../.env') })
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const HITESH_SIR_CHANNEL_ID = process.env.HITESH_SIR_CHANNEL_ID;
+const PIYUSH_SIR_CHANNEL_ID = process.env.PIYUSH_SIR_CHANNEL_ID;
+
+export const youtubeVideoSearchingTool = tool({
+    name:'youtubeVideoSearchingTool',
+    description:'This tool helps in searching for the youtube videos',
+    parameters:z.object({
+        query:z.string().trim().describe('name of the search query , searched by user'),
+        videos:z.number().describe('amount of videos the user wants to fetch'),
+        teacherName:z.string().trim().optional().describe('name of the teacher')
+    }),
+    execute:async ({query,videos,teacherName}) => {
+        if(teacherName){
+            return teacherName.toLowerCase() === 'hitesh'? 
+            await searchVideos(query,videos,HITESH_SIR_CHANNEL_ID):
+            await searchVideos(query,videos,PIYUSH_SIR_CHANNEL_ID)
+        }
+     return await searchVideos(query,videos)
+    },
+})
 
 
 export const weatherTool = tool({
@@ -43,81 +62,3 @@ export const sendEmailToUserTool = tool({
   
   }
 })
-
-
-
-
-
-const sendEmailToMehul = async (name:string, email:string, message:string) => {
-  try {
-    const response = await resend.emails.send({
-      from: "contact@mehularora.dev",
-      // AFTER DOMAIN VERIFICATION USE:
-      // from: "Portfolio <contact@mehularora.dev>",
-
-      to: email,
-
-      replyTo: "mehularora506@gmail.com",
-
-      subject: "Portfolio Interaction",
-
-      html: `
-      <div style="
-        max-width: 600px;
-        margin: auto;
-        padding: 30px;
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        border-radius: 12px;
-        border: 1px solid #ddd;
-      ">
-        <h1 style="color: #7c3aed; text-align: center; margin-bottom: 30px;">
-          New Portfolio Message
-        </h1>
-
-        <div style="
-          background-color: white;
-          padding: 20px;
-          border-radius: 10px;
-          margin-bottom: 20px;
-        ">
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-        </div>
-
-        <div style="
-          background-color: white;
-          padding: 20px;
-          border-radius: 10px;
-        ">
-          <h2 style="color: #7c3aed;">Message</h2>
-          <p style="
-            white-space: pre-wrap;
-            line-height: 1.7;
-          ">
-            ${message}
-          </p>
-        </div>
-      </div>
-      `,
-    });
-
-    if(response.error){
-      throw response.error
-    }
-
-      return {
-      success:true,
-      data:response
-    }
-
-  } catch (err) {
-
-    console.log("EMAIL ERROR =>", err);
-
-    return {
-      success:false,
-      error:err instanceof Error ?  err.message:'unknown error'
-    }
-  }
-};
