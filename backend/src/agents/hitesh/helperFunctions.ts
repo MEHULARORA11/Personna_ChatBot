@@ -73,44 +73,165 @@ export const sendEmailToMehul = async (name:string, email:string, message:string
       subject: "Portfolio Interaction",
 
       html: `
-      <div style="
-        max-width: 600px;
-        margin: auto;
-        padding: 30px;
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        border-radius: 12px;
-        border: 1px solid #ddd;
+<div style="
+  background-color:#0f172a;
+  padding:40px 20px;
+  font-family:Arial,sans-serif;
+">
+
+  <div style="
+    max-width:650px;
+    margin:auto;
+    background:linear-gradient(145deg,#111827,#1e293b);
+    border-radius:20px;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,0.08);
+    box-shadow:0 10px 40px rgba(0,0,0,0.35);
+  ">
+
+    <!-- HEADER -->
+    <div style="
+      padding:35px 30px;
+      background:linear-gradient(135deg,#7c3aed,#4f46e5);
+      text-align:center;
+    ">
+      <h1 style="
+        margin:0;
+        color:white;
+        font-size:32px;
+        font-weight:700;
+        letter-spacing:1px;
       ">
-        <h1 style="color: #7c3aed; text-align: center; margin-bottom: 30px;">
-          New Portfolio Message
-        </h1>
+        AI Assistant Notification
+      </h1>
 
-        <div style="
-          background-color: white;
-          padding: 20px;
-          border-radius: 10px;
-          margin-bottom: 20px;
-        ">
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-        </div>
+      <p style="
+        margin-top:12px;
+        color:rgba(255,255,255,0.85);
+        font-size:15px;
+        line-height:1.6;
+      ">
+        A new interaction has been initiated through your AI assistant platform.
+      </p>
+    </div>
 
-        <div style="
-          background-color: white;
-          padding: 20px;
-          border-radius: 10px;
+    <!-- BODY -->
+    <div style="
+      padding:35px 30px;
+      background-color:#111827;
+    ">
+
+      <!-- USER DETAILS -->
+      <div style="
+        background-color:#1e293b;
+        border:1px solid rgba(255,255,255,0.08);
+        border-radius:16px;
+        padding:24px;
+        margin-bottom:25px;
+      ">
+
+        <h2 style="
+          color:#c4b5fd;
+          margin-top:0;
+          margin-bottom:20px;
+          font-size:20px;
         ">
-          <h2 style="color: #7c3aed;">Message</h2>
-          <p style="
-            white-space: pre-wrap;
-            line-height: 1.7;
+          User Information
+        </h2>
+
+        <div style="margin-bottom:14px;">
+          <span style="
+            color:#94a3b8;
+            font-size:14px;
+            display:block;
+            margin-bottom:4px;
           ">
-            ${message}
-          </p>
+            Name
+          </span>
+
+          <span style="
+            color:white;
+            font-size:16px;
+            font-weight:600;
+          ">
+            ${name}
+          </span>
         </div>
+
+        <div>
+          <span style="
+            color:#94a3b8;
+            font-size:14px;
+            display:block;
+            margin-bottom:4px;
+          ">
+            Email Address
+          </span>
+
+          <span style="
+            color:white;
+            font-size:16px;
+            font-weight:600;
+          ">
+            ${email}
+          </span>
+        </div>
+
       </div>
-      `,
+
+      <!-- MESSAGE -->
+      <div style="
+        background-color:#1e293b;
+        border:1px solid rgba(255,255,255,0.08);
+        border-radius:16px;
+        padding:24px;
+      ">
+
+        <h2 style="
+          color:#c4b5fd;
+          margin-top:0;
+          margin-bottom:20px;
+          font-size:20px;
+        ">
+          User Message
+        </h2>
+
+        <div style="
+          color:#e2e8f0;
+          font-size:15px;
+          line-height:1.9;
+          white-space:pre-wrap;
+        ">
+          ${message}
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div style="
+      padding:22px;
+      text-align:center;
+      background-color:#0f172a;
+      border-top:1px solid rgba(255,255,255,0.06);
+    ">
+
+      <p style="
+        margin:0;
+        color:#94a3b8;
+        font-size:13px;
+        line-height:1.7;
+      ">
+        Sent via your AI Assistant System • Powered by Mehul Arora
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+`,
     });
 
     if(response.error){
