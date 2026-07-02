@@ -196,7 +196,7 @@ function containsAbuse(text:string) {
 }
 
 function containsNonEnglish(text:string) {
-  return /[^a-zA-Z0-9\s@#$%^&*!?.,_+-]/.test(text);
+  return /[^\x00-\x7F]/.test(text);
 }
 
 
