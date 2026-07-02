@@ -4,7 +4,7 @@ import axios from 'axios'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import dotenv from 'dotenv'
-import {sendEmailToMehul,searchVideos} from './helperFunctions.ts'
+import {sendEmailToMehul,searchVideos,searchPlaylists} from './helperFunctions.ts'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 dotenv.config({ path: resolve(__dirname, '../../../.env') })
@@ -17,7 +17,7 @@ export const youtubeVideoSearchingTool = tool({
     description:'This tool helps in searching for the youtube videos',
     parameters:z.object({
         query:z.string().trim().describe('name of the search query , searched by user'),
-        videos:z.number().describe('amount of videos the user wants to fetch'),
+        videos:z.number().describe('amount of videos the user wants to fetch').default(1),
         teacherName:z.string().trim().optional().describe('name of the teacher')
     }),
     execute:async ({query,videos,teacherName}) => {
@@ -27,6 +27,23 @@ export const youtubeVideoSearchingTool = tool({
             await searchVideos(query,videos,PIYUSH_SIR_CHANNEL_ID)
         }
      return await searchVideos(query,videos)
+    },
+})
+export const youtubePlaylistSearchingTool = tool({
+    name:'youtubePlaylistSearchingTool',
+    description:'This tool helps in searching for the youtube playlist',
+    parameters:z.object({
+        query:z.string().trim().describe('name of the search query , searched by user'),
+        playlists:z.number().describe('amount of playlists the user wants to fetch').default(1),
+        teacherName:z.string().trim().optional().describe('name of the teacher')
+    }),
+    execute:async ({query,playlists,teacherName}) => {
+        if(teacherName){
+            return teacherName.toLowerCase() === 'hitesh'? 
+            await searchPlaylists(query,playlists,HITESH_SIR_CHANNEL_ID):
+            await searchPlaylists(query,playlists,PIYUSH_SIR_CHANNEL_ID)
+        }
+     return await searchPlaylists(query,playlists)
     },
 })
 
