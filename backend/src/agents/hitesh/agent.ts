@@ -4,8 +4,15 @@ import {OpenAI} from 'openai'
 import dotenv from 'dotenv'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import {weatherAgent,emailAgent,youtubeVideoSearchingAgent,youtubePlaylistSearchingAgent} from './agenticTools.ts'
+import
+ {
+    weatherAgent,
+    emailAgent,
+    youtubeVideoSearchingAgent,
+    youtubePlaylistSearchingAgent
+} from './agenticTools.ts'
 import {mainAgentInstruction} from './instruction.ts'
+import {guardRailAgent} from './guardrailAgent.ts'
 
 const client = new OpenAI()
 
@@ -54,23 +61,34 @@ while(true){
     }
 
   process.stdout.write('ChatBot: ')
-  await main(question)
+  try {
+    await main(question)
+  } catch (error) {
+    console.log(error)
+  }
   console.log('\n')
 
 }
 rl.close()
 
 async function main(question:string){
-    
- const response = await run(hiteshAgent,[
-    {
-    role:'system',
-    content:'you are a helpful assistant who help user in every possible way'
-    },
+
+    const guardRailResponse = await run(guardRailAgent,[
         {
         role:"user",
         content:question
-    }
+       }
+])
+
+if(!guardRailResponse?.finalOutput?.isValidQuery){
+throw new Error(`Invalid Querry , due to Reason => ${guardRailResponse?.finalOutput?.reason}`)
+}
+    
+ const response = await run(hiteshAgent,[
+        {
+        role:"user",
+        content:question
+       }
 ],{
     stream:true,
     conversationId:id
@@ -83,8 +101,6 @@ for await (const chunk of streamOutput){
 }
 
 }
-
-
 
 async function askQuestion(querry:string = ''):Promise<string>{
   return new Promise((resolve) => {
