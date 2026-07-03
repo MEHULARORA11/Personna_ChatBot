@@ -70,7 +70,7 @@ export const sendEmailToMehul = async (name:string, email:string, message:string
 
       replyTo: "mehularora506@gmail.com",
 
-      subject: "Portfolio Interaction",
+      subject: "Hitesh Sir's Assistant",
 
       html: `
 <div style="

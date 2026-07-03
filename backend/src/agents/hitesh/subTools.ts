@@ -62,20 +62,41 @@ export const weatherTool = tool({
 
     },
 })
+
 export const sendEmailToUserTool = tool({
   name:"send_email_to_user",
-  description:"this tool will send an email to the user via Resend service provider",
+  description:"Send an email to the user using Resend",
+  
   parameters:z.object({
     user_email:z.string().email().max(100).min(11).describe('email of the user'),
     name_of_sender:z.string().describe('sender name'),
     sender_message:z.string().describe('message by sender')
   }),
-  execute:async function({sender_message,name_of_sender,user_email}){
-     const response = await sendEmailToMehul(name_of_sender,user_email,sender_message)
-   if(response?.success){
-    return 'email sended successfully' // note tools main return karna is must as us return value ko dekh ke hi ai predict karta hain ki kaam hua ya nahin as vo sirf function call karta hain kaam hua ya nahin ye use return statement se pata chalta hain 
-   }
-    return `Failed to send email: ${response.error}`
-  
+
+  execute:async function({
+    sender_message,
+    name_of_sender,
+    user_email
+  }) {
+
+    const response = await sendEmailToMehul(
+      name_of_sender,
+      user_email,
+      sender_message
+    )
+
+    if(response.success){
+      return {
+        success:true,
+        message:"Email sent successfully"
+      }
+    }
+
+    return {
+      success:false,
+      error:response.error || "Unknown email error"
+    }
   }
 })
+
+
