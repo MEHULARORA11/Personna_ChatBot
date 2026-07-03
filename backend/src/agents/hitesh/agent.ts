@@ -4,22 +4,29 @@ import {OpenAI} from 'openai'
 import dotenv from 'dotenv'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import
- {
-    weatherAgent,
-    emailAgent,
-    youtubeVideoSearchingAgent,
-    youtubePlaylistSearchingAgent
-} from './agenticTools.ts'
+// import
+//  {
+//     weatherAgent,
+//     emailAgent,
+//     youtubeVideoSearchingAgent,
+//     youtubePlaylistSearchingAgent
+// } from './agenticTools.ts'
 import {mainAgentInstruction} from './instruction.ts'
 import {guardRailAgent} from './guardrailAgent.ts'
+import {SYSTEM} from './Persona.ts'
+import{
+    weatherTool,
+    sendEmailToUserTool,
+    youtubeVideoSearchingTool,
+    youtubePlaylistSearchingTool
+} from './subTools.ts'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+dotenv.config({ path: resolve(__dirname, '../../../.env') })
 
 const client = new OpenAI()
 
 const {id} = await client.conversations.create({})
-
-const __dirname = dirname(fileURLToPath(import.meta.url))
-dotenv.config({ path: resolve(__dirname, '../../../.env') })
 
 const rl = readline.createInterface({
     input:process.stdin,
@@ -33,23 +40,11 @@ const hiteshAgent = new Agent({
     model,
     instructions: mainAgentInstruction,
     tools:[
-        weatherAgent.asTool({
-        toolName:'weatherAgent',
-        toolDescription:'fetches realtime weather details'
-    }),
-    emailAgent.asTool({
-        toolName:'emailAgent',
-        toolDescription:`This Tool helps in sending emails`
-    }),
-    youtubeVideoSearchingAgent.asTool({
-        toolName:'youtubeVideoSearchingAgent',
-        toolDescription:`This tool will help the user to fetch youtube videos of hitesh and piyush`
-    }),
-    youtubePlaylistSearchingAgent.asTool({
-        toolName:'youtubePlaylistSearchingAgent',
-        toolDescription:`This tool will help the user to fetch youtube playlist of hitesh and piyush`
-    }),
-]
+    weatherTool,
+    sendEmailToUserTool,
+    youtubeVideoSearchingTool,
+    youtubePlaylistSearchingTool
+    ]
 })
 
 
@@ -85,6 +80,10 @@ throw new Error(`Invalid Querry , due to Reason => ${guardRailResponse?.finalOut
 }
     
  const response = await run(hiteshAgent,[
+        {
+        role:"system",
+        content:SYSTEM
+       },
         {
         role:"user",
         content:question
