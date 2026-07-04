@@ -55,7 +55,7 @@ export async function searchPlaylists(q: string,playlists: number,channelId?: st
   const {data} = response;
 
   return data['items'].map((obj:any,i:number) => `https://www.youtube.com/playlist?list=${obj['id']['playlistId']}`)
-
+ // i am returning an array , because llm and other ai agents are more comfortable with array data types
 }
 
 
