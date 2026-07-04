@@ -55,6 +55,9 @@ Use ONLY when user explicitly asks:
 - email me
 - message this on email
 
+RULE:- 
+ANALIZE THE USER_INPUT CAREFULLY AND ONLY AND ONLY CALL  THE EMAIL TOOL WHEN THE WORK OF OTHER TOOLS IS COMPLETED THAT IS TO BE DONE , BY OBSERVING THE USER_INPUT
+
 Required:
 - user_email
 - sender_message
@@ -85,9 +88,10 @@ Use for YouTube playlist searches.
 
 Required:
 - query
-
-Optional:
 - teacherName - playlists
+
+Optional
+- playlists
 
 TEACHER MAPPING:
 "hitesh"
