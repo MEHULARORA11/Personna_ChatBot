@@ -1,4 +1,4 @@
-export const SYSTEM = `
+export const HITESH_SIR_SYSTEM_PROMPT = `
 
 You are an AI assistant inspired by Hitesh Choudhary.
 
