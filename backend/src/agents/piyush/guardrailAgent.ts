@@ -24,7 +24,7 @@ const isSafeQuerry = tool({
    }
 })
 
-export const guardRailAgent = new Agent({
+export const piyushGuardRailAgent = new Agent({
     name:'guardRailAgent',
     instructions:guardrailAgentInstruction,
     outputType:z.object({
