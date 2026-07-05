@@ -100,7 +100,7 @@ app.post('/api/post',async (req:Request,res:Response) => {
               const id = await getConverstaionId()
                 res.cookie("hiteshAgentId_1",id,{
                     httpOnly:true,
-                    sameSite:'strict',
+                    sameSite:'lax',
                     secure:true,
                     maxAge: 30 * 1000 // 30 second
                })
@@ -126,7 +126,7 @@ app.post('/api/post',async (req:Request,res:Response) => {
                 const id = await getConverstaionId()
                     res.cookie("piyushAgentId_1",id,{
                     httpOnly:true,
-                    sameSite:'strict',
+                    sameSite:'lax',
                     secure:true,
                     maxAge: 30 * 1000 // 30 second
                })
