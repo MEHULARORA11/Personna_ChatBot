@@ -1,4 +1,4 @@
-import Application from './src/app.ts'
+import Application from './app.ts'
 import http from 'node:http'
 import 'dotenv/config'
 
