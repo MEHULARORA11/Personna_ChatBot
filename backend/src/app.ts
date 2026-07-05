@@ -16,16 +16,17 @@ import {PIYUSH_SIR_SYSTEM_PROMPT} from './agents/piyush/Persona.ts'
 import {piyushGuardRailAgent} from './agents/piyush/guardrailAgent.ts'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-dotenv.config({ path: resolve(__dirname, '../../.env') })
+dotenv.config({ path: resolve(__dirname, '../.env') })
 
 const client = new OpenAI()
 
 const app = express()
+const CLIENT_BASE_URL:string = process.env?.CLIENT_BASE_URL!
 
 app.use(express.json())
 app.use(express.urlencoded())
 app.use(cors({
-    origin:["http://localhost:5173","https://personabot.mehularora.dev"],
+    origin:[CLIENT_BASE_URL,"https://personic.mehularora.dev"],
     credentials:true,
 }))
 app.use(cookieParser())
@@ -34,10 +35,7 @@ async function getConverstaionId():Promise<string>{
  const {id} = await client.conversations.create({})
  return id
 }
-type GuardRailOutput = {
-  isValidQuery:boolean,
-  reason:string
-}
+
 async function main(
     personiqAgent:Agent,
     guardRailAgent:Agent<any,any>,
