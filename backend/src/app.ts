@@ -78,6 +78,7 @@ res.end()
 }
 
 app.post('/api/post',async (req:Request,res:Response) => {
+    console.log(CLIENT_BASE_URL)
 
     const {message,persona} = req.body
 
