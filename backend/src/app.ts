@@ -23,12 +23,14 @@ const client = new OpenAI()
 const app = express()
 const CLIENT_BASE_URL:string = process.env?.CLIENT_BASE_URL!
 
-app.use(express.json())
-app.use(express.urlencoded())
 app.use(cors({
     origin:[CLIENT_BASE_URL,"https://personic.mehularora.dev"],
     credentials:true,
 }))
+
+app.use(express.json())
+app.use(express.urlencoded())
+
 app.use(cookieParser())
 
 async function getConverstaionId():Promise<string>{
