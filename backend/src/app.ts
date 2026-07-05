@@ -84,7 +84,7 @@ app.get('/',(req:Request,res:Response) => {
 })
 
 app.post('/api/post',async (req:Request,res:Response) => {
-    console.log(CLIENT_BASE_URL)
+    // console.log(CLIENT_BASE_URL)
 
     const {message,persona} = req.body
 
