@@ -79,6 +79,10 @@ res.end()
 
 }
 
+app.get('/',(req:Request,res:Response) => {
+    res.status(200).json({health:'ok'})
+})
+
 app.post('/api/post',async (req:Request,res:Response) => {
     console.log(CLIENT_BASE_URL)
 
