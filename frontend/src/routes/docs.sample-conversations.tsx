@@ -1,5 +1,8 @@
-
 import { Coffee, Terminal } from 'lucide-react';
+import { motion } from 'framer-motion';
+import DocHeader from '../components/docs/DocHeader';
+import DocsPagerFooter from '../components/docs/DocsPagerFooter';
+import TableOfContents from '../components/docs/TableOfContents';
 
 interface MockBubbleProps {
   sender: 'user' | 'persona';
@@ -37,147 +40,153 @@ function MockBubble({ sender, content, avatarLabel, gradient }: MockBubbleProps)
 
 export default function DocsSampleConversations() {
   return (
-    <div className="space-y-6">
-      {/* Title */}
-      <div className="border-b border-zinc-200 dark:border-zinc-800 pb-4">
-        <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-zinc-50 font-display">
-          Sample Conversations
-        </h1>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
-          Side-by-side comparison of conversational tone, vocabulary, and teaching styles.
-        </p>
-      </div>
+    <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="flex gap-10"
+    >
+      <div className="flex-1 min-w-0 docs-content space-y-6">
+        <DocHeader
+          title="Sample Conversations"
+          subtitle="Side-by-side comparison of conversational tone, vocabulary, and teaching styles."
+          readingTime="2 min read"
+        />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Column 1: Hitesh Sir */}
-        <div className="space-y-4 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 bg-white/40 dark:bg-black/40 backdrop-blur-sm">
-          <div className="flex items-center gap-2 pb-3 border-b border-zinc-200 dark:border-zinc-800">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-white">
-              <Coffee className="w-4 h-4" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Column 1: Hitesh Sir */}
+          <div className="space-y-4 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 bg-white/40 dark:bg-black/40 backdrop-blur-sm">
+            <div className="flex items-center gap-2 pb-3 border-b border-zinc-200 dark:border-zinc-800">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-white">
+                <Coffee className="w-4 h-4" />
+              </div>
+              <div>
+                <h2 className="text-sm font-bold text-zinc-900 dark:text-zinc-50 font-display">
+                  Hitesh Sir (Chai aur Code)
+                </h2>
+                <p className="text-[10px] text-zinc-500 font-mono">
+                  Tone: Warm, intuitive, calm mentor
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-50 font-display">
-                Hitesh Sir (Chai aur Code)
-              </h3>
-              <p className="text-[10px] text-zinc-500 font-mono">
-                Tone: Warm, intuitive, calm mentor
-              </p>
-            </div>
-          </div>
 
-          <div className="space-y-4">
-            {/* Exchange 1 */}
-            <div className="space-y-2">
-              <MockBubble sender="user" content="Sir coding start karni ho toh kaise karun?" avatarLabel="HC" />
-              <MockBubble
-                sender="persona"
-                avatarLabel="HC"
-                gradient="from-amber-600 to-orange-500"
-                content={`Simple si baat hai:
+            <div className="space-y-4">
+              {/* Exchange 1 */}
+              <div className="space-y-2">
+                <MockBubble sender="user" content="Sir coding start karni ho toh kaise karun?" avatarLabel="HC" />
+                <MockBubble
+                  sender="persona"
+                  avatarLabel="HC"
+                  gradient="from-amber-600 to-orange-500"
+                  content={`Simple si baat hai:
 JavaScript se start karo.
 
 ChaiCode pe playlist freely available hai. Pehle ek language complete karo properly.
 
 Phir gradually cheezein click karne lagti hain.`}
-              />
-            </div>
+                />
+              </div>
 
-            {/* Exchange 2 */}
-            <div className="space-y-2">
-              <MockBubble sender="user" content="Sir kya main html main dsa kar sakta hun ?" avatarLabel="HC" />
-              <MockBubble
-                sender="persona"
-                avatarLabel="HC"
-                gradient="from-amber-600 to-orange-500"
-                content="azaad desh hain ji. Jo marzi karo😂"
-              />
-            </div>
+              {/* Exchange 2 */}
+              <div className="space-y-2">
+                <MockBubble sender="user" content="Sir kya main html main dsa kar sakta hun ?" avatarLabel="HC" />
+                <MockBubble
+                  sender="persona"
+                  avatarLabel="HC"
+                  gradient="from-amber-600 to-orange-500"
+                  content="azaad desh hain ji. Jo marzi karo😂"
+                />
+              </div>
 
-            {/* Exchange 3 */}
-            <div className="space-y-2">
-              <MockBubble sender="user" content="Sir App Store pe app publish kiya sir" avatarLabel="HC" />
-              <MockBubble
-                sender="persona"
-                avatarLabel="HC"
-                gradient="from-amber-600 to-orange-500"
-                content={`Big big congratulations 🔥
+              {/* Exchange 3 */}
+              <div className="space-y-2">
+                <MockBubble sender="user" content="Sir App Store pe app publish kiya sir" avatarLabel="HC" />
+                <MockBubble
+                  sender="persona"
+                  avatarLabel="HC"
+                  gradient="from-amber-600 to-orange-500"
+                  content={`Big big congratulations 🔥
 
 League se alag kaam kiya hai tumne.
 
 Aur freelancing ya contract positions mein, ab tumhare paas ek solid portfolio proof hai ki: "haan bhai, app development aata hai."
 
 Aur App Store pe publish hona itself is a big deal.`}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Column 2: Piyush Sir */}
-        <div className="space-y-4 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 bg-white/40 dark:bg-black/40 backdrop-blur-sm">
-          <div className="flex items-center gap-2 pb-3 border-b border-zinc-200 dark:border-zinc-800">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-500 flex items-center justify-center text-white">
-              <Terminal className="w-4 h-4" />
-            </div>
-            <div>
-              <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-50 font-display">
-                Piyush Sir (Code with Piyush)
-              </h3>
-              <p className="text-[10px] text-zinc-500 font-mono">
-                Tone: Livestream chat, high-energy tech debate
-              </p>
+                />
+              </div>
             </div>
           </div>
 
-          <div className="space-y-4">
-            {/* Exchange 1 */}
-            <div className="space-y-2">
-              <MockBubble sender="user" content="Bro Django ka future batao…" avatarLabel="PG" />
-              <MockBubble
-                sender="persona"
-                avatarLabel="PG"
-                gradient="from-cyan-500 to-blue-600"
-                content={`Honestly, Django ke saath maine zyada kaam nahi kiya.
+          {/* Column 2: Piyush Sir */}
+          <div className="space-y-4 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 bg-white/40 dark:bg-black/40 backdrop-blur-sm">
+            <div className="flex items-center gap-2 pb-3 border-b border-zinc-200 dark:border-zinc-800">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-500 flex items-center justify-center text-white">
+                <Terminal className="w-4 h-4" />
+              </div>
+              <div>
+                <h2 className="text-sm font-bold text-zinc-900 dark:text-zinc-50 font-display">
+                  Piyush Sir (Code with Piyush)
+                </h2>
+                <p className="text-[10px] text-zinc-500 font-mono">
+                  Tone: Livestream chat, high-energy tech debate
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              {/* Exchange 1 */}
+              <div className="space-y-2">
+                <MockBubble sender="user" content="Bro Django ka future batao…" avatarLabel="PG" />
+                <MockBubble
+                  sender="persona"
+                  avatarLabel="PG"
+                  gradient="from-cyan-500 to-blue-600"
+                  content={`Honestly, Django ke saath maine zyada kaam nahi kiya.
 Main toh kisi bhi din NodeJS aur ExpressJS choose karunga.
 Aur agar Python ecosystem ki baat karein toh mujhe FastAPI bahut pasand hai.
 
 Django mujhe kaafi opinionated lagta hai. Isliye coding karne mein utna maza nahi aaya.`}
-              />
-            </div>
+                />
+              </div>
 
-            {/* Exchange 2 */}
-            <div className="space-y-2">
-              <MockBubble sender="user" content="Sir backlog hai… kaise clear hoga" avatarLabel="PG" />
-              <MockBubble
-                sender="persona"
-                avatarLabel="PG"
-                gradient="from-cyan-500 to-blue-600"
-                content={`Mere खुद 4–5 backlogs the.
+              {/* Exchange 2 */}
+              <div className="space-y-2">
+                <MockBubble sender="user" content="Sir backlog hai… kaise clear hoga" avatarLabel="PG" />
+                <MockBubble
+                  sender="persona"
+                  avatarLabel="PG"
+                  gradient="from-cyan-500 to-blue-600"
+                  content={`Mere खुद 4–5 backlogs the.
 
 Bas self-learning mat chhodo. Skills pe focus rakho.
 
 Degree haath mein le lo. Baaki knowledge khud build karni padti hai.`}
-              />
-            </div>
+                />
+              </div>
 
-            {/* Exchange 3 */}
-            <div className="space-y-2">
-              <MockBubble sender="user" content="RDBMS vs NoSQL kaise choose karte ho?" avatarLabel="PG" />
-              <MockBubble
-                sender="persona"
-                avatarLabel="PG"
-                gradient="from-cyan-500 to-blue-600"
-                content={`Bahut accha question hai 👀
+              {/* Exchange 3 */}
+              <div className="space-y-2">
+                <MockBubble sender="user" content="RDBMS vs NoSQL kaise choose karte ho?" avatarLabel="PG" />
+                <MockBubble
+                  sender="persona"
+                  avatarLabel="PG"
+                  gradient="from-cyan-500 to-blue-600"
+                  content={`Bahut accha question hai 👀
 
 Mera default choice almost hamesha PostgreSQL hota hai.
 
 Agar mujhe pata hai application kya build karni hai... Features predictable hain... Toh I go with RDBMS.
 
 NoSQL main mostly analytics ya cache ke liye use karta hoon. Denormalize karke nested JSON format mein save kar do, fast reads mil jayenge.`}
-              />
+                />
+              </div>
             </div>
           </div>
         </div>
+
+        <DocsPagerFooter />
       </div>
-    </div>
+      <TableOfContents />
+    </motion.div>
   );
 }

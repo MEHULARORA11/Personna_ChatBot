@@ -1,32 +1,15 @@
+import { motion } from 'framer-motion';
+import DocHeader from '../components/docs/DocHeader';
+import DocsPagerFooter from '../components/docs/DocsPagerFooter';
+import TableOfContents from '../components/docs/TableOfContents';
+import SourceRef from '../components/docs/SourceRef';
+import CodeBlock from '../components/docs/CodeBlock';
+import Callout from '../components/docs/Callout';
+import ComparisonGrid from '../components/docs/ComparisonGrid';
+import ComparisonCard from '../components/docs/ComparisonCard';
+
 export default function DocsPersonaData() {
-  return (
-    <div className="space-y-6">
-      {/* Title */}
-      <div className="border-b border-zinc-200 dark:border-zinc-800 pb-4">
-        <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-zinc-50 font-display">
-          Persona Data & Grounding
-        </h1>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
-          How persona characteristics, statistics, and tone profiles are defined in the backend.
-        </p>
-      </div>
-
-      {/* Concept */}
-      <div className="prose prose-zinc dark:prose-invert max-w-none text-sm md:text-base leading-relaxed space-y-4">
-        <p>
-          Instead of using fine-tuned model weights (which are expensive to train and update), the agents are grounded using a **biographical prompt engineering approach**.
-          Each persona's voice, experience, preferences, and signature quotes are explicitly defined in a system prompt module. This guarantees factual correctness (e.g. correct channel names and subscriber figures) while retaining personality alignment.
-        </p>
-
-        <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 font-display mt-6 mb-2">
-          Hitesh Sir Persona Configuration
-        </h2>
-        <p>
-          Defined in [Persona.ts (Hitesh)](file:///d:/PROGRAMMING/WEB%20DEVELOPMENT/JS/js/ChatBot/backend/src/agents/hitesh/Persona.ts), the prompt establishes his profile as a veteran coding mentor and tea lover:
-        </p>
-        
-        <pre className="p-4 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-xs font-mono overflow-x-auto text-zinc-700 dark:text-zinc-300">
-{`// Excerpt from backend/src/agents/hitesh/Persona.ts
+  const hiteshPrompt = `// Excerpt from backend/src/agents/hitesh/Persona.ts
 export const HITESH_SIR_SYSTEM_PROMPT = \`
 You are an AI assistant inspired by Hitesh Choudhary.
 
@@ -53,18 +36,9 @@ SPEAKING PATTERNS:
 - "Simple si baat hai..."
 - "Ek kaam karo..."
 - "Trust me..."
-\`;`}
-        </pre>
+\`;`;
 
-        <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 font-display mt-6 mb-2">
-          Piyush Sir Persona Configuration
-        </h2>
-        <p>
-          Defined in [Persona.ts (Piyush)](file:///d:/PROGRAMMING/WEB%20DEVELOPMENT/JS/js/ChatBot/backend/src/agents/piyush/Persona.ts), the prompt establishes him as a high-energy startup engineer who is unmarried and holds strong technology preferences:
-        </p>
-
-        <pre className="p-4 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-xs font-mono overflow-x-auto text-zinc-700 dark:text-zinc-300">
-{`// Excerpt from backend/src/agents/piyush/Persona.ts
+  const piyushPrompt = `// Excerpt from backend/src/agents/piyush/Persona.ts
 export const PIYUSH_SIR_SYSTEM_PROMPT = \`
 You are an AI assistant inspired by Piyush Garg.
 
@@ -85,16 +59,104 @@ SPEAKING PATTERNS:
 * "Dekho..." | "See..." | "Honestly..." | "Bro..."
 * "Samajh rahe ho?" | "Rest depends..."
 * "Bahut interesting question hai..."
-\`;`}
-        </pre>
+\`;`;
 
-        <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 font-display mt-6 mb-2">
-          Tone Realism & Script Conversions
-        </h2>
-        <p>
-          The system prompts enforce a strict rule that **all Hindi words must be in Latin/English script** (e.g. writing "kaafi achha hai" instead of "काफ़ी अच्छा है"). This simulates a natural WhatsApp/live-chat messaging pattern commonly used in coding cohorts and online communication in the Indian developers community.
-        </p>
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="flex gap-10"
+    >
+      <div className="flex-1 min-w-0 docs-content space-y-6">
+        <DocHeader
+          title="Persona Data & Grounding"
+          subtitle="How persona characteristics, statistics, and tone profiles are defined in the backend."
+          readingTime="3 min read"
+        />
+
+        {/* Concept */}
+        <div className="prose prose-zinc dark:prose-invert max-w-none text-sm md:text-base leading-relaxed space-y-4">
+          <p>
+            Instead of using fine-tuned model weights (which are expensive to train and update), the agents are grounded using a{' '}
+            <strong className="font-semibold text-zinc-900 dark:text-zinc-100">biographical prompt engineering approach</strong>.
+            Each persona's voice, experience, preferences, and signature quotes are explicitly defined in a system prompt module. This guarantees factual correctness (e.g. correct channel names and subscriber figures) while retaining personality alignment.
+          </p>
+
+          <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 font-display mt-6 mb-2">
+            Persona Configurations
+          </h2>
+          <p>
+            The two main personalities in the system are configured through individual system prompt definitions.
+            Below is a side-by-side breakdown of the profiles established in the backend codebase:
+          </p>
+        </div>
+
+        {/* Comparison Grid */}
+        <ComparisonGrid>
+          <ComparisonCard
+            persona="hitesh"
+            title="Hitesh Sir Persona Configuration"
+            subtitle="backend/src/agents/hitesh/Persona.ts"
+          >
+            <div className="text-xs text-zinc-600 dark:text-zinc-400 space-y-2">
+              <p>
+                Established as a veteran coding mentor, community builder, and tea lover. Teaches concepts with intuition first and uses encouraging language.
+              </p>
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/10 font-mono text-[10px]">Chai aur Code</span>
+                <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/10 font-mono text-[10px]">Mentor Energy</span>
+                <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/10 font-mono text-[10px]">Hinglish</span>
+              </div>
+            </div>
+            <CodeBlock filename="hitesh/Persona.ts" lang="typescript">
+              {hiteshPrompt}
+            </CodeBlock>
+          </ComparisonCard>
+
+          <ComparisonCard
+            persona="piyush"
+            title="Piyush Sir Persona Configuration"
+            subtitle="backend/src/agents/piyush/Persona.ts"
+          >
+            <div className="text-xs text-zinc-600 dark:text-zinc-400 space-y-2">
+              <p>
+                Established as a high-energy software engineer, startup advisor, and system design enthusiast. Self-obsessed, unmarried, and highly opinionated about tech stacks.
+              </p>
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                <span className="px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/10 font-mono text-[10px]">Code with Piyush</span>
+                <span className="px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/10 font-mono text-[10px]">Startup Minded</span>
+                <span className="px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/10 font-mono text-[10px]">System Design</span>
+              </div>
+            </div>
+            <CodeBlock filename="piyush/Persona.ts" lang="typescript">
+              {piyushPrompt}
+            </CodeBlock>
+          </ComparisonCard>
+        </ComparisonGrid>
+
+        {/* Tone Realism & Script Conversions */}
+        <div className="space-y-4">
+          <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 font-display">
+            Tone Realism & Script Conversions
+          </h2>
+          
+          <Callout tone="info" title="Why Script Conversions Matter">
+            The system prompts enforce a strict rule that{' '}
+            <strong className="font-semibold text-amber-900 dark:text-amber-200">all Hindi words must be in Latin/English script</strong>{' '}
+            (e.g., writing "kaafi achha hai" instead of "काफ़ी अच्छा है"). This simulates a natural WhatsApp/live-chat messaging pattern commonly used in coding cohorts and online communication in the Indian developer community.
+          </Callout>
+
+          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+            For code details, check the source file configs in{' '}
+            <SourceRef path="backend/src/agents/hitesh/Persona.ts" /> and{' '}
+            <SourceRef path="backend/src/agents/piyush/Persona.ts" />.
+          </p>
+        </div>
+
+        <DocsPagerFooter />
       </div>
-    </div>
+      <TableOfContents />
+    </motion.div>
   );
 }

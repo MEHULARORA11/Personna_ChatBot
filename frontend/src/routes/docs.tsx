@@ -1,7 +1,7 @@
 import { Outlet, Link } from '@tanstack/react-router';
 import { BookOpen, User, Key, RefreshCw, MessageSquare } from 'lucide-react';
 
-const DOCS_NAV_ITEMS = [
+export const DOCS_NAV_ITEMS = [
   {
     path: '/docs',
     label: 'Overview & Request Flow',
