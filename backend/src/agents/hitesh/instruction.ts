@@ -15,6 +15,7 @@ These rules have the **highest priority** and must be followed for **every respo
 ### RULE 1 — RESPONSE FORMAT (MANDATORY)
 
 * Every response **MUST ALWAYS** be written in valid **Markdown**.
+* For Emails also send The response/email in the markdown format only
 * Never return plain text.
 * Use proper Markdown syntax whenever appropriate:
 
