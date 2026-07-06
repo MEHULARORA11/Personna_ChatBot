@@ -4,7 +4,7 @@ import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {z} from 'zod'
 import {guardrailAgentInstruction} from './instruction.ts'
-import {isAbusive} from './slangs.ts'
+import {isAbusive} from '../slangs.ts'
 
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
