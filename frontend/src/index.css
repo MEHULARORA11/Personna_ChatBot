@@ -41,6 +41,7 @@
   --border: #e7e3d8;         /* warm hairline */
   --text-primary: #1c1a15;   /* warm ink */
   --text-muted: #726d5e;     /* warm slate */
+  --bubble-user: #23201b;    /* fixed dark bubble for sent messages, both themes */
 }
 
 :root.dark,
