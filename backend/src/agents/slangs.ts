@@ -101,7 +101,7 @@ const abusivePatterns = [
 
   /[t+]w[a@][t+][s$]?/i,
 
-   // MC / BC
+   
   /\bmc\b/i,
   /\bbc\b/i,
   /m+a+d+[ae]r+c+h?[o0]*d+/i,
@@ -109,70 +109,67 @@ const abusivePatterns = [
   /b+h+[ae]n+c+h?[o0]*d+/i,
   /b+[ae]h+n+c+h?[o0]*d+/i,
 
-  // BSDK
+
   /b+h+[oa]?[s\$]*d+k/i,
   /b+[ae]h+n+k+[ae]?\s*l+[o0]*d+[ae]/i,
   /bsdk/i,
 
-  // Chutiya
+
   /c+h+u+t+[i1y]+[ae]/i,
   /c+h+u+t+/i,
 
-  // Gaandu / Gand
   /g+[ae]n+d+u+/i,
   /g+[ae]n+d+/i,
   /g+a+a+n+d+/i,
 
-  // Lund
+  
   /l+u+n+d+/i,
   /l+o+d+[uua]*/i,
 
-  // Randi
+
   /r+a+n+d+[i1]/i,
   /r+a+n+d/i,
   /r+a+n+d/i,
 
-  // Harami
+
   /h+a+r+a+m+[i1]/i,
   /haram/i,
 
-  // Kaminey
+  
   /k+a+m+[i1]n+[aey]+/i,
 
-  // Chod
+  
   /chod/i,
 
-  // Kutta / Kamina
+  
   /k+u+t+t+[ae]/i,
   /k+a+m+[i1]n+a+/i,
 
-  // Teri maa / maa ki
+  
   /m+a+a+\s*k+[i1]/i,
   /t+e+r+[i1]\s*m+a+a+/i,
 
-  // Behen ke lode
+  
   /b+[ae]h+n+\s*k+e+\s*l+[o0]*d+e+/i,
 
-  // Betichod
   /b+e+t+[i1]+c+h?[o0]*d+/i,
 
-  // Bakchod
+  
   /b+a+k+c+h?[o0]*d+/i,
 
-  // Lavde / lawde
+  
   /l+[ae]v+d+e+/i,
   /l+a+w+d+e+/i,
 
-  // Jhatu
   /j+h+a+t+u+/i,
 
-  // Bhosdike
+  
   /b+h+[o0]+s+d+[i1]k+e+/i,
 
-  // Chu***
+  
   /c+h+u+\*/i,
 
-  // Misc common
+  
   /m+u+t+h+/i,
   /t+a+t+t+e+/i,
   /c+h+a+k+k+e+/i,
@@ -183,7 +180,7 @@ function normalizeText(text:string) {
   return text
     .toLowerCase()
 
-    // leetspeak replacements
+    
     .replace(/[@4]/g, "a")
     .replace(/[3]/g, "e")
     .replace(/[1!|]/g, "i")
