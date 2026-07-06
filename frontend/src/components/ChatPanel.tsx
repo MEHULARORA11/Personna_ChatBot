@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, AlertCircle, Sparkles, Terminal, Coffee } from 'lucide-react';
+import { Send, AlertCircle, Paperclip, Coffee, Terminal } from 'lucide-react';
 import { sendChatMessage } from '../api/chat';
 import type { ChatMessage } from '../api/chat';
-import { animate } from 'animejs';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -30,9 +29,9 @@ const CopyButton = ({ text }: { text: string }) => {
     <button
       onClick={handleCopy}
       type="button"
-      className="text-[10px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white transition-all flex items-center gap-1 cursor-pointer font-sans"
+      className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-zinc-400 hover:bg-white/20 hover:text-white transition-colors cursor-pointer font-sans"
     >
-      {copied ? 'Copied!' : 'Copy'}
+      {copied ? 'Copied' : 'Copy'}
     </button>
   );
 };
@@ -45,80 +44,88 @@ const MarkdownComponents = {
 
     if (!isInline) {
       return (
-        <div className="my-2.5 rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800/80 bg-zinc-950 text-zinc-100 font-mono text-xs shadow-md">
-          <div className="flex items-center justify-between px-4 py-1.5 bg-zinc-900 border-b border-zinc-800/80 text-[10px] uppercase font-bold tracking-wider text-zinc-400">
+        <div className="my-2.5 rounded-xl overflow-hidden border border-black/10 bg-[#1b1a17] text-zinc-100 font-mono text-xs shadow-sm">
+          <div className="flex items-center justify-between px-3.5 py-1.5 bg-black/20 text-[10px] uppercase font-semibold tracking-wider text-zinc-400">
             <span>{match ? match[1] : 'code'}</span>
             <CopyButton text={codeString} />
           </div>
-          <pre className="p-3.5 overflow-x-auto scrollbar-thin text-[11px] leading-relaxed">
+          <pre className="p-3.5 overflow-x-auto text-[11.5px] leading-relaxed">
             <code>{codeString}</code>
           </pre>
         </div>
       );
     }
     return (
-      <code className="bg-zinc-100 dark:bg-zinc-800/60 text-orange-600 dark:text-amber-400 px-1.5 py-0.5 rounded font-mono text-[11px] border border-zinc-200 dark:border-zinc-800/50" {...props}>
+      <code
+        className="bg-accent/10 text-accent px-1.5 py-0.5 rounded font-mono text-[12px]"
+        {...props}
+      >
         {children}
       </code>
     );
   },
   p({ children }: any) {
-    return <p className="mb-2 last:mb-0 leading-relaxed text-sm">{children}</p>;
+    return <p className="mb-2 last:mb-0 leading-relaxed text-[14.5px]">{children}</p>;
   },
   ul({ children }: any) {
-    return <ul className="list-disc pl-5 mb-2.5 space-y-1 text-sm">{children}</ul>;
+    return <ul className="list-disc pl-5 mb-2.5 space-y-1 text-[14.5px]">{children}</ul>;
   },
   ol({ children }: any) {
-    return <ol className="list-decimal pl-5 mb-2.5 space-y-1 text-sm">{children}</ol>;
+    return <ol className="list-decimal pl-5 mb-2.5 space-y-1 text-[14.5px]">{children}</ol>;
   },
   li({ children }: any) {
     return <li className="leading-relaxed">{children}</li>;
   },
   h1({ children }: any) {
-    return <h1 className="text-base font-bold mt-3 mb-1.5 text-zinc-950 dark:text-zinc-50">{children}</h1>;
+    return <h1 className="text-base font-semibold mt-3 mb-1.5 font-display">{children}</h1>;
   },
   h2({ children }: any) {
-    return <h2 className="text-sm font-bold mt-2.5 mb-1.5 text-zinc-950 dark:text-zinc-50">{children}</h2>;
+    return <h2 className="text-[15px] font-semibold mt-2.5 mb-1.5 font-display">{children}</h2>;
   },
   h3({ children }: any) {
-    return <h3 className="text-xs font-bold mt-2 mb-1 text-zinc-950 dark:text-zinc-50">{children}</h3>;
+    return <h3 className="text-sm font-semibold mt-2 mb-1 font-display">{children}</h3>;
   },
   a({ href, children }: any) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className="text-amber-600 dark:text-amber-400 underline hover:text-amber-700 dark:hover:text-amber-300 font-medium transition-colors">
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-accent underline underline-offset-2 hover:text-accent-hover font-medium transition-colors"
+      >
         {children}
       </a>
     );
   },
   blockquote({ children }: any) {
     return (
-      <blockquote className="border-l-3 border-zinc-300 dark:border-zinc-700 pl-3.5 py-1 my-2 italic text-zinc-500 dark:text-zinc-400 bg-zinc-50/50 dark:bg-zinc-900/30 rounded-r-lg">
+      <blockquote className="border-l-2 border-accent/40 pl-3.5 py-0.5 my-2 italic text-text-muted">
         {children}
       </blockquote>
     );
   },
   table({ children }: any) {
     return (
-      <div className="overflow-x-auto my-3 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm">
-        <table className="min-w-full divide-y divide-zinc-200 dark:divide-zinc-800 text-xs text-left">{children}</table>
+      <div className="overflow-x-auto my-3 border border-border-main rounded-xl">
+        <table className="min-w-full divide-y divide-border-main text-xs text-left">{children}</table>
       </div>
     );
   },
   thead({ children }: any) {
-    return <thead className="bg-zinc-50 dark:bg-zinc-900/60 text-zinc-700 dark:text-zinc-300 uppercase font-semibold text-[10px] tracking-wider">{children}</thead>;
+    return <thead className="bg-bg-base text-text-muted uppercase font-semibold text-[10px] tracking-wider">{children}</thead>;
   },
   tbody({ children }: any) {
-    return <tbody className="divide-y divide-zinc-100 dark:divide-zinc-900/40 bg-white dark:bg-zinc-950/20">{children}</tbody>;
+    return <tbody className="divide-y divide-border-main">{children}</tbody>;
   },
   tr({ children }: any) {
-    return <tr className="hover:bg-zinc-50/40 dark:hover:bg-zinc-900/10 transition-colors">{children}</tr>;
+    return <tr>{children}</tr>;
   },
   th({ children }: any) {
-    return <th className="px-4 py-2.5 font-bold border-b border-zinc-200 dark:border-zinc-800">{children}</th>;
+    return <th className="px-3.5 py-2.5 font-semibold">{children}</th>;
   },
   td({ children }: any) {
-    return <td className="px-4 py-2.5 border-b border-zinc-100 dark:border-zinc-900/60 text-zinc-600 dark:text-zinc-400 leading-normal">{children}</td>;
-  }
+    return <td className="px-3.5 py-2.5 text-text-muted leading-normal">{children}</td>;
+  },
 };
 
 export default function ChatPanel({
@@ -128,11 +135,10 @@ export default function ChatPanel({
   onReceiveChunk,
   onStreamComplete,
   onStreamError,
-  isTyping
+  isTyping,
 }: ChatPanelProps) {
   const [inputVal, setInputVal] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const sendBtnRef = useRef<HTMLButtonElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -142,13 +148,13 @@ export default function ChatPanel({
     // Show toast when the persona changes
     if (lastPersonaRef.current !== activePersonaId) {
       const isHitesh = activePersonaId === 'hitesh';
-      setToastMessage(isHitesh ? 'Chai Mode Active ☕' : 'Engine Mode Active 🚀');
+      setToastMessage(isHitesh ? 'Chai Mode active' : 'Engine Mode active');
       lastPersonaRef.current = activePersonaId;
-      
+
       const timer = setTimeout(() => {
         setToastMessage(null);
       }, 2000);
-      
+
       return () => clearTimeout(timer);
     }
   }, [activePersonaId]);
@@ -162,7 +168,7 @@ export default function ChatPanel({
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 220)}px`;
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 200)}px`;
     }
   }, [inputVal]);
 
@@ -180,15 +186,6 @@ export default function ChatPanel({
       textareaRef.current.style.height = 'auto';
     }
 
-    // AnimeJS micro-interaction: Bounce effect on the send button
-    if (sendBtnRef.current) {
-      animate(sendBtnRef.current, {
-        scale: [1, 0.8, 1.1, 1],
-        duration: 400,
-        ease: 'easeOutElastic(1, .5)'
-      });
-    }
-
     // Call API helper for streaming
     sendChatMessage({
       persona: activePersonaId,
@@ -201,7 +198,7 @@ export default function ChatPanel({
       },
       onComplete: () => {
         onStreamComplete();
-      }
+      },
     });
   };
 
@@ -224,34 +221,28 @@ export default function ChatPanel({
 
   const greeting = getGreeting();
   const isHitesh = activePersonaId === 'hitesh';
-
-  // Define accent colors depending on the active persona
-  const themeAccentClass = isHitesh 
-    ? 'text-amber-500 bg-amber-500/10 border-amber-500/20' 
-    : 'text-cyan-500 bg-cyan-500/10 border-cyan-500/20';
-
-  const themeBtnBg = isHitesh
-    ? 'bg-amber-600 hover:bg-amber-700 shadow-amber-500/20'
-    : 'bg-cyan-600 hover:bg-cyan-700 shadow-cyan-500/20';
+  const accentVar = isHitesh ? 'var(--accent)' : 'var(--engine)';
 
   return (
-    <div className="flex flex-col h-[650px] md:h-[720px] bg-white/70 dark:bg-zinc-950/70 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl overflow-hidden backdrop-blur-md relative">
+    <div
+      className="flex flex-col h-[calc(100dvh-4rem)] sm:h-[680px] lg:h-[720px] sm:rounded-2xl sm:border sm:shadow-sm overflow-hidden relative bg-bg-surface"
+      style={{ borderColor: 'var(--border)' }}
+    >
       {/* Toast Notification */}
       <AnimatePresence>
         {toastMessage && (
           <motion.div
-            initial={{ opacity: 0, y: -20, scale: 0.95, x: '-50%' }}
-            animate={{ opacity: 1, y: 0, scale: 1, x: '-50%' }}
-            exit={{ opacity: 0, y: -20, scale: 0.95, x: '-50%' }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="absolute top-20 left-1/2 z-30 pointer-events-none"
+            initial={{ opacity: 0, y: -12, x: '-50%' }}
+            animate={{ opacity: 1, y: 0, x: '-50%' }}
+            exit={{ opacity: 0, y: -12, x: '-50%' }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="absolute top-4 left-1/2 z-30 pointer-events-none"
           >
-            <div className={`px-4 py-2 rounded-full border shadow-lg text-xs font-semibold tracking-wide font-mono flex items-center gap-2 backdrop-blur-md ${
-              isHitesh 
-                ? 'bg-amber-50/95 border-amber-200 text-amber-800 dark:bg-amber-950/95 dark:border-amber-900 dark:text-amber-300 shadow-amber-500/10'
-                : 'bg-cyan-50/95 border-cyan-200 text-cyan-800 dark:bg-cyan-950/95 dark:border-cyan-900 dark:text-cyan-300 shadow-cyan-500/10'
-            }`}>
-              <span className={`w-2 h-2 rounded-full animate-pulse ${isHitesh ? 'bg-amber-500' : 'bg-cyan-500'}`} />
+            <div
+              className="px-3.5 py-1.5 rounded-full border shadow-sm text-xs font-medium flex items-center gap-1.5 bg-bg-surface"
+              style={{ borderColor: accentVar, color: accentVar }}
+            >
+              <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: accentVar }} />
               {toastMessage}
             </div>
           </motion.div>
@@ -259,69 +250,72 @@ export default function ChatPanel({
       </AnimatePresence>
 
       {/* Panel Header */}
-      <div className="px-6 py-4 border-b border-zinc-200 dark:border-zinc-900 bg-white/40 dark:bg-black/40 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full overflow-hidden border border-zinc-200 dark:border-zinc-800 flex-shrink-0 shadow-sm">
+      <div
+        className="px-4 sm:px-6 py-3.5 sm:py-4 border-b flex items-center justify-between shrink-0"
+        style={{ borderColor: 'var(--border)' }}
+      >
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-9 h-9 rounded-full overflow-hidden border shrink-0" style={{ borderColor: 'var(--border)' }}>
             <img
               src={isHitesh ? '/hitesh.png' : '/piyush.jpg'}
               alt={isHitesh ? 'Hitesh Choudhary' : 'Piyush Garg'}
               className="w-full h-full object-cover"
             />
           </div>
-          <div>
-            <h2 className="text-base font-bold text-zinc-900 dark:text-zinc-50 font-display flex items-center gap-1.5 leading-none">
-              Chatting with {isHitesh ? 'Hitesh Sir' : 'Piyush Sir'}
-              <span className="text-xs px-2 py-0.5 rounded-full border text-[10px] font-mono leading-none tracking-wider uppercase bg-zinc-100 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800">
-                AI Agent
-              </span>
+          <div className="min-w-0">
+            <h2 className="text-[15px] font-semibold font-display leading-none truncate">
+              {isHitesh ? 'Hitesh Sir' : 'Piyush Sir'}
             </h2>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 flex items-center gap-1">
-              <span className={`w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse`} />
-              Active memory (30s auto-refresh)
+            <p className="text-xs text-text-muted mt-1 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              Online
             </p>
           </div>
         </div>
-        <div className={`px-3 py-1.5 rounded-lg border text-xs font-mono flex items-center gap-1.5 ${themeAccentClass}`}>
-          {isHitesh ? <Coffee className="w-3.5 h-3.5" /> : <Terminal className="w-3.5 h-3.5" />}
+        <div
+          className="hidden xs:flex px-2.5 py-1 rounded-full border text-[11px] font-mono items-center gap-1.5 shrink-0"
+          style={{ borderColor: accentVar, color: accentVar }}
+        >
+          {isHitesh ? <Coffee className="w-3 h-3" /> : <Terminal className="w-3 h-3" />}
           <span>{isHitesh ? 'Chai Mode' : 'Engine Mode'}</span>
         </div>
       </div>
 
       {/* Messages Window */}
-      <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6 scrollbar-thin scrollbar-thumb-zinc-200 dark:scrollbar-thumb-zinc-800">
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-5 sm:py-6 space-y-5">
         {messages.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-center p-6 md:p-8 space-y-4 select-none">
-            {/* Title Greeting with gradient and signature */}
-            <div className="space-y-3">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, ease: 'easeOut' }}
-                className="text-3xl md:text-4xl font-extrabold tracking-tight font-display bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 dark:from-amber-400 dark:via-orange-400 dark:to-cyan-400 bg-clip-text text-transparent"
-              >
-                {greeting.text}, I'm Personic {greeting.icon}
-              </motion.div>
-              <p className="text-xs md:text-sm text-zinc-500 dark:text-zinc-400 max-w-md mx-auto font-sans leading-relaxed font-medium">
-                Your smart AI coding mentor chatbot. Choose a mentor on the left to start learning, code auditing, or system modeling.
+          <div className="h-full flex flex-col items-center justify-center text-center px-4 space-y-3 select-none">
+            <div className="w-14 h-14 rounded-full overflow-hidden border-2 mb-1" style={{ borderColor: accentVar }}>
+              <img
+                src={isHitesh ? '/hitesh.png' : '/piyush.jpg'}
+                alt={isHitesh ? 'Hitesh Choudhary' : 'Piyush Garg'}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-2xl sm:text-3xl font-semibold font-display leading-tight">
+                {greeting.text}, I&apos;m Personic {greeting.icon}
+              </h3>
+              <p className="text-sm text-text-muted max-w-xs sm:max-w-sm mx-auto leading-relaxed">
+                Ask a coding question and {isHitesh ? 'Hitesh' : 'Piyush'} will answer in their own voice.
               </p>
             </div>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-5">
             <AnimatePresence initial={false}>
               {messages.map((msg) => {
                 const isUser = msg.sender === 'user';
                 return (
                   <motion.div
                     key={msg.id}
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.25 }}
-                    className={`flex items-start gap-3 ${isUser ? 'justify-end' : 'justify-start'}`}
+                    transition={{ duration: 0.2 }}
+                    className={`flex items-end gap-2.5 ${isUser ? 'justify-end' : 'justify-start'}`}
                   >
-                    {/* Persona Avatar on Left */}
                     {!isUser && (
-                      <div className="w-8 h-8 rounded-full overflow-hidden border border-zinc-200 dark:border-zinc-800 flex-shrink-0 mt-1 shadow-sm">
+                      <div className="w-7 h-7 rounded-full overflow-hidden border shrink-0" style={{ borderColor: 'var(--border)' }}>
                         <img
                           src={isHitesh ? '/hitesh.png' : '/piyush.jpg'}
                           alt={isHitesh ? 'Hitesh Choudhary' : 'Piyush Garg'}
@@ -330,59 +324,62 @@ export default function ChatPanel({
                       </div>
                     )}
 
-                    {/* Chat Bubble */}
                     <div
-                      className={`max-w-[80%] rounded-2xl px-4.5 py-3 text-sm leading-relaxed shadow-sm border ${
+                      className={`max-w-[82%] sm:max-w-[75%] rounded-2xl px-4 py-2.5 text-[14.5px] leading-relaxed ${
                         isUser
-                          ? 'bg-zinc-900 border-zinc-800 text-white rounded-tr-none dark:bg-zinc-100 dark:border-zinc-200 dark:text-zinc-900 ml-auto'
+                          ? 'text-white rounded-br-md'
                           : msg.isError
-                          ? 'bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400 rounded-tl-none font-medium flex items-center gap-2'
-                          : 'bg-white border-zinc-200 text-zinc-800 rounded-tl-none dark:bg-zinc-900/60 dark:border-zinc-800/80 dark:text-zinc-200'
+                          ? 'bg-red-500/10 text-red-500 rounded-bl-md font-medium flex items-center gap-2 border border-red-500/20'
+                          : 'bg-bg-base border rounded-bl-md'
                       }`}
+                      style={
+                        isUser
+                          ? { backgroundColor: 'var(--text-primary)' }
+                          : !msg.isError
+                          ? { borderColor: 'var(--border)' }
+                          : undefined
+                      }
                     >
                       {msg.isError && <AlertCircle className="w-4 h-4 flex-shrink-0" />}
-                      
+
                       {isUser || msg.isError ? (
                         <span className="whitespace-pre-wrap">{msg.content}</span>
                       ) : (
-                        <ReactMarkdown 
-                          remarkPlugins={[remarkGfm]} 
-                          components={MarkdownComponents as any}
-                        >
+                        <ReactMarkdown remarkPlugins={[remarkGfm]} components={MarkdownComponents as any}>
                           {msg.content}
                         </ReactMarkdown>
                       )}
                     </div>
-
-                    {/* User Avatar on Right */}
-                    {isUser && (
-                      <div className="w-8 h-8 rounded-full bg-zinc-200 dark:bg-zinc-800 flex-shrink-0 flex items-center justify-center text-zinc-700 dark:text-zinc-300 text-xs font-bold mt-1 border border-zinc-300/40 dark:border-zinc-700/40">
-                        ME
-                      </div>
-                    )}
                   </motion.div>
                 );
               })}
             </AnimatePresence>
 
-            {/* Custom Streaming Typing Indicator */}
+            {/* Typing indicator */}
             {isTyping && messages.length > 0 && messages[messages.length - 1].sender === 'user' && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="flex items-start gap-3 justify-start"
+                className="flex items-end gap-2.5 justify-start"
               >
-                <div className="w-8 h-8 rounded-full overflow-hidden border border-zinc-200 dark:border-zinc-800 flex-shrink-0 mt-1">
+                <div className="w-7 h-7 rounded-full overflow-hidden border shrink-0" style={{ borderColor: 'var(--border)' }}>
                   <img
                     src={isHitesh ? '/hitesh.png' : '/piyush.jpg'}
                     alt={isHitesh ? 'Hitesh Choudhary' : 'Piyush Garg'}
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="bg-white border border-zinc-200 dark:bg-zinc-900/60 dark:border-zinc-800/80 rounded-2xl rounded-tl-none px-4 py-3 flex items-center gap-1.5 shadow-sm">
-                  <span className="w-2.5 h-2.5 bg-zinc-400 dark:bg-zinc-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <span className="w-2.5 h-2.5 bg-zinc-400 dark:bg-zinc-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <span className="w-2.5 h-2.5 bg-zinc-400 dark:bg-zinc-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                <div
+                  className="border rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-1.5"
+                  style={{ borderColor: 'var(--border)', backgroundColor: 'var(--bg-base)' }}
+                >
+                  {[0, 150, 300].map((delay) => (
+                    <span
+                      key={delay}
+                      className="w-1.5 h-1.5 rounded-full animate-bounce"
+                      style={{ backgroundColor: 'var(--text-muted)', animationDelay: `${delay}ms` }}
+                    />
+                  ))}
                 </div>
               </motion.div>
             )}
@@ -391,71 +388,52 @@ export default function ChatPanel({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Bar Form */}
-      <form onSubmit={handleSubmit} className="p-4 md:p-6 border-t border-zinc-200 dark:border-zinc-900 bg-white/40 dark:bg-black/40">
-        <div className="relative flex flex-col bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-3 shadow-inner focus-within:ring-2 focus-within:ring-amber-500/30 dark:focus-within:ring-cyan-500/30 transition-all duration-300 max-w-3xl mx-auto">
-          {/* Text Area */}
+      {/* Input Bar */}
+      <form
+        onSubmit={handleSubmit}
+        className="p-3 sm:p-4 border-t shrink-0 pb-safe"
+        style={{ borderColor: 'var(--border)' }}
+      >
+        <div
+          className={`flex items-end gap-2 rounded-2xl border p-2 pl-3.5 transition-shadow duration-200 focus-within:ring-2 ${
+            isHitesh ? 'focus-within:ring-accent/30' : 'focus-within:ring-engine/30'
+          }`}
+          style={{
+            borderColor: 'var(--border)',
+            backgroundColor: 'var(--bg-base)',
+          }}
+        >
+          <button
+            type="button"
+            className="p-2 rounded-full text-text-muted hover:text-text-primary hover:bg-bg-surface transition-colors cursor-pointer shrink-0 mb-0.5"
+            title="Attach a file"
+          >
+            <Paperclip className="w-4 h-4" />
+          </button>
+
           <textarea
             ref={textareaRef}
-            rows={2}
+            rows={1}
             value={inputVal}
             onChange={(e) => setInputVal(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={isTyping ? 'Waiting for reply...' : `Message ${isHitesh ? 'Hitesh Sir' : 'Piyush Sir'}...`}
+            placeholder={isTyping ? 'Waiting for reply…' : `Message ${isHitesh ? 'Hitesh Sir' : 'Piyush Sir'}…`}
             disabled={isTyping}
-            className={`w-full bg-transparent border-0 p-1.5 text-sm placeholder-zinc-400 dark:placeholder-zinc-600 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-0 resize-none min-h-[50px] max-h-[180px] leading-relaxed pr-10`}
+            className="flex-1 bg-transparent border-0 py-2 text-sm placeholder-text-muted focus:outline-none focus:ring-0 resize-none min-h-[24px] max-h-[200px] leading-relaxed"
           />
-          
-          {/* Action Row */}
-          <div className="flex items-center justify-between border-t border-zinc-100 dark:border-zinc-900/50 pt-2.5 mt-2">
-            {/* Decorative Claude/ChatGPT styled utility buttons */}
-            <div className="flex items-center gap-1.5 text-zinc-400 dark:text-zinc-500">
-              <button
-                type="button"
-                className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors cursor-pointer"
-                title="Add attachment"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 5.636l-3.536 3.536m0 0l-3.536 3.536m3.536-3.536L13.5 13.5m-6-6l3.536 3.536m0 0L7.5 14.5m3.536-3.536L16.5 7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </button>
-              <button
-                type="button"
-                className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors cursor-pointer"
-                title="Use prompt templates"
-              >
-                <Sparkles className="w-4 h-4" />
-              </button>
-              <button
-                type="button"
-                className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors cursor-pointer disabled:opacity-20"
-                title="Clear input text"
-                onClick={() => setInputVal('')}
-                disabled={!inputVal}
-              >
-                <span className="text-[11px] font-semibold font-sans">Clear</span>
-              </button>
-            </div>
-            
-            {/* Send Button and Instructions */}
-            <div className="flex items-center gap-3">
-              <span className="hidden sm:inline text-[10px] text-zinc-400 dark:text-zinc-500 font-mono">
-                Shift+Enter for new line
-              </span>
-              <button
-                ref={sendBtnRef}
-                type="submit"
-                disabled={!inputVal.trim() || isTyping}
-                className={`p-2.5 rounded-xl text-white transition-all duration-300 flex items-center justify-center cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shadow-md ${themeBtnBg}`}
-                aria-label="Send Message"
-              >
-                <Send className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
+
+          <button
+            type="submit"
+            disabled={!inputVal.trim() || isTyping}
+            className="p-2.5 rounded-full text-white transition-all duration-200 flex items-center justify-center cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
+            style={{ backgroundColor: accentVar }}
+            aria-label="Send message"
+          >
+            <Send className="w-4 h-4" />
+          </button>
         </div>
-        <p className="text-[10px] text-zinc-400 dark:text-zinc-600 text-center mt-3 font-mono">
-          Personic &bull; Response streams are live &bull; Preserves history locally
+        <p className="text-[10.5px] text-text-muted text-center mt-2.5 font-mono hidden sm:block">
+          Enter to send &bull; Shift+Enter for a new line
         </p>
       </form>
     </div>

@@ -1,70 +1,120 @@
-import { Outlet, Link } from '@tanstack/react-router';
+import { Outlet, Link, useRouterState } from '@tanstack/react-router';
+import { useState } from 'react';
 import ThemeToggle from '../components/ThemeToggle';
-import { Coffee, FileText, MessageSquare } from 'lucide-react';
+import { FileText, MessageSquare, Menu, X } from 'lucide-react';
 
 export default function RootLayout() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isChat = pathname === '/';
+
   return (
-    <div className="flex flex-col min-h-screen bg-bg-base text-text-primary transition-colors duration-300">
+    <div className="flex flex-col min-h-dvh bg-bg-base text-text-primary transition-colors duration-300">
       {/* Top Navbar */}
-      <header className="sticky top-0 z-50 border-b border-zinc-200/60 dark:border-zinc-800/60 bg-white/40 dark:bg-black/40 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <header className="sticky top-0 z-50 border-b border-border-main/70 bg-bg-base/80 backdrop-blur-md">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* Logo / Brand */}
           <Link
             to="/"
-            className="flex items-center gap-2 hover:opacity-95 transition-opacity"
+            className="flex items-center gap-2.5 group"
+            onClick={() => setMenuOpen(false)}
           >
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 via-orange-500 to-amber-600 flex items-center justify-center text-white shadow-md shadow-amber-500/10">
-              <Coffee className="w-5 h-5" />
-            </div>
-            <div>
-              <span className="font-bold text-lg tracking-tight font-display bg-gradient-to-r from-zinc-900 to-zinc-700 dark:from-white dark:to-zinc-300 bg-clip-text text-transparent">
-                PersonaBot
+            <span className="w-9 h-9 rounded-full bg-accent/12 border border-accent/25 flex items-center justify-center text-accent font-display text-lg font-semibold group-hover:bg-accent/18 transition-colors">
+              P
+            </span>
+            <span className="flex flex-col leading-none">
+              <span className="font-display text-lg font-semibold tracking-tight">
+                Personic
               </span>
-              <span className="text-[10px] block font-mono text-zinc-500 leading-none tracking-widest uppercase">
-                Chai & Code
+              <span className="text-[10px] font-mono text-text-muted uppercase tracking-[0.16em]">
+                Chai &amp; Code
               </span>
-            </div>
+            </span>
           </Link>
 
-          {/* Navigation Links */}
-          <nav className="flex items-center gap-1 sm:gap-4">
+          {/* Desktop Navigation */}
+          <nav className="hidden sm:flex items-center gap-1">
             <Link
               to="/"
-              activeProps={{ className: 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 font-semibold' }}
-              inactiveProps={{ className: 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/40' }}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm transition-all duration-200"
+              activeProps={{ className: 'text-text-primary bg-bg-surface border-border-main shadow-sm' }}
+              inactiveProps={{ className: 'text-text-muted border-transparent hover:text-text-primary' }}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-medium border transition-all duration-200"
             >
-              <MessageSquare className="w-4 h-4" />
+              <MessageSquare className="w-3.5 h-3.5" />
               <span>Chat</span>
             </Link>
             <Link
               to="/docs"
-              activeProps={{ className: 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 font-semibold' }}
-              inactiveProps={{ className: 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/40' }}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm transition-all duration-200"
+              activeProps={{ className: 'text-text-primary bg-bg-surface border-border-main shadow-sm' }}
+              inactiveProps={{ className: 'text-text-muted border-transparent hover:text-text-primary' }}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-medium border transition-all duration-200"
             >
-              <FileText className="w-4 h-4" />
+              <FileText className="w-3.5 h-3.5" />
               <span>Docs</span>
             </Link>
-            <div className="h-6 w-px bg-zinc-200 dark:bg-zinc-800 mx-2" />
+            <div className="h-6 w-px bg-border-main mx-2" />
             <ThemeToggle />
           </nav>
+
+          {/* Mobile controls */}
+          <div className="flex sm:hidden items-center gap-2">
+            <ThemeToggle />
+            <button
+              type="button"
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={menuOpen}
+              className="p-2.5 rounded-full border border-border-main text-text-muted hover:text-text-primary transition-colors"
+            >
+              {menuOpen ? <X className="w-4.5 h-4.5" /> : <Menu className="w-4.5 h-4.5" />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile menu sheet */}
+        {menuOpen && (
+          <nav className="sm:hidden border-t border-border-main/70 px-4 py-3 flex flex-col gap-1 bg-bg-base/95">
+            <Link
+              to="/"
+              onClick={() => setMenuOpen(false)}
+              activeProps={{ className: 'text-text-primary bg-bg-surface border-border-main' }}
+              inactiveProps={{ className: 'text-text-muted border-transparent' }}
+              className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-sm font-medium border transition-colors"
+            >
+              <MessageSquare className="w-4 h-4" />
+              Chat
+            </Link>
+            <Link
+              to="/docs"
+              onClick={() => setMenuOpen(false)}
+              activeProps={{ className: 'text-text-primary bg-bg-surface border-border-main' }}
+              inactiveProps={{ className: 'text-text-muted border-transparent' }}
+              className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-sm font-medium border transition-colors"
+            >
+              <FileText className="w-4 h-4" />
+              Docs
+            </Link>
+          </nav>
+        )}
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col">
+      <main
+        className={`flex-1 w-full max-w-6xl mx-auto flex flex-col ${
+          isChat ? 'px-0 sm:px-6 lg:px-8 py-0 sm:py-6' : 'px-4 sm:px-6 lg:px-8 py-6'
+        }`}
+      >
         <Outlet />
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-200 dark:border-zinc-900 py-6 bg-white/10 dark:bg-black/10 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-mono text-zinc-500">
-          <p>&copy; 2026 PersonaBot. Inspired by Hitesh Choudhary & Piyush Garg.</p>
+      <footer className="hidden sm:block border-t border-border-main/70 py-5">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-3 text-xs font-mono text-text-muted">
+          <p>Personic &mdash; inspired by Hitesh Choudhary &amp; Piyush Garg</p>
           <div className="flex gap-4">
-            <Link to="/" className="hover:underline">Chat Dashboard</Link>
-            <span>&bull;</span>
-            <Link to="/docs" className="hover:underline">System Documentation</Link>
+            <Link to="/" className="hover:text-text-primary transition-colors">Chat</Link>
+            <span className="opacity-40">&bull;</span>
+            <Link to="/docs" className="hover:text-text-primary transition-colors">Docs</Link>
           </div>
         </div>
       </footer>

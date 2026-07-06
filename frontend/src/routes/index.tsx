@@ -3,7 +3,6 @@ import ThreeCanvas from '../components/ThreeCanvas';
 import PersonaPicker from '../components/PersonaPicker';
 import ChatPanel from '../components/ChatPanel';
 import type { ChatMessage } from '../api/chat';
-import { motion } from 'framer-motion';
 
 export default function IndexPage() {
   const [activePersona, setActivePersona] = useState<'hitesh' | 'piyush'>('hitesh');
@@ -15,7 +14,7 @@ export default function IndexPage() {
     piyush: ChatMessage[];
   }>({
     hitesh: [],
-    piyush: []
+    piyush: [],
   });
 
   const handleSendMessage = (content: string) => {
@@ -25,19 +24,19 @@ export default function IndexPage() {
     const userMsg: ChatMessage = {
       id: newMsgId,
       sender: 'user',
-      content
+      content,
     };
 
     const replyMsgId = `reply-${Date.now()}`;
     const initialReplyMsg: ChatMessage = {
       id: replyMsgId,
       sender: 'persona',
-      content: ''
+      content: '',
     };
 
     setChatHistories((prev) => ({
       ...prev,
-      [activePersona]: [...prev[activePersona], userMsg, initialReplyMsg]
+      [activePersona]: [...prev[activePersona], userMsg, initialReplyMsg],
     }));
   };
 
@@ -52,14 +51,14 @@ export default function IndexPage() {
       if (lastMsg && lastMsg.sender === 'persona') {
         const updatedMsg = {
           ...lastMsg,
-          content: lastMsg.content + chunk
+          content: lastMsg.content + chunk,
         };
         history[lastMsgIdx] = updatedMsg;
       }
 
       return {
         ...prev,
-        [activePersona]: history
+        [activePersona]: history,
       };
     });
   };
@@ -72,9 +71,10 @@ export default function IndexPage() {
     setIsTyping(false);
 
     // Custom error message based on active persona
-    const customErrorMsg = activePersona === 'hitesh'
-      ? "nahin ji , ye ye sab nahin chalega yaha par, ye sawaal restricted hain"
-      : "are bhai, ye sab mat karo, ye saare sawaal allowed nahin hain .";
+    const customErrorMsg =
+      activePersona === 'hitesh'
+        ? 'nahin ji , ye ye sab nahin chalega yaha par, ye sawaal restricted hain'
+        : 'are bhai, ye sab mat karo, ye saare sawaal allowed nahin hain .';
 
     setChatHistories((prev) => {
       const history = [...prev[activePersona]];
@@ -82,7 +82,7 @@ export default function IndexPage() {
 
       const lastMsgIdx = history.length - 1;
       const lastMsg = history[lastMsgIdx];
-      
+
       // If the last message is empty and failed, replace it with an error bubble.
       // Otherwise, create a new error message bubble.
       if (lastMsg && lastMsg.sender === 'persona' && lastMsg.content === '') {
@@ -90,54 +90,52 @@ export default function IndexPage() {
           id: lastMsg.id,
           sender: 'persona',
           content: customErrorMsg,
-          isError: true
+          isError: true,
         };
       } else {
         history.push({
           id: `error-${Date.now()}`,
           sender: 'persona',
           content: customErrorMsg,
-          isError: true
+          isError: true,
         });
       }
 
       return {
         ...prev,
-        [activePersona]: history
+        [activePersona]: history,
       };
     });
   };
 
   return (
-    <div className="flex-1 flex flex-col justify-between relative min-h-[calc(100vh-10rem)] py-4">
-      {/* Dynamic 3D WebGL Background particle sphere */}
+    <div className="flex-1 flex flex-col relative">
+      {/* Dynamic 3D WebGL background particle sphere (desktop only) */}
       <ThreeCanvas activePersona={activePersona} />
 
-      {/* Hero Welcome / Intro */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="text-center max-w-2xl mx-auto mb-8 space-y-3 z-10"
-      >
-        <span className="px-3 py-1 rounded-full border border-amber-500/20 text-amber-600 dark:text-amber-400 bg-amber-500/5 text-xs font-mono tracking-wider uppercase font-semibold">
+      {/* Hero — hidden on mobile to give the chat full height */}
+      <div className="hidden sm:block text-center max-w-xl mx-auto mb-6 space-y-2 z-10 px-4">
+        <span
+          className="inline-block px-3 py-1 rounded-full border text-[11px] font-mono tracking-wider uppercase font-medium"
+          style={{ borderColor: 'var(--border)', color: 'var(--text-muted)' }}
+        >
           AI Interview Series
         </span>
-        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 font-display leading-tight">
-          Interact with Coding Mentors
+        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight font-display leading-tight">
+          Talk to your coding mentors
         </h1>
-        <p className="text-sm md:text-base text-zinc-500 dark:text-zinc-400 leading-relaxed">
-          Ask questions, get weather details, or search for video tutorials. Responses are styled after real mentors using Hinglish tone behaviors.
+        <p className="text-sm text-text-muted leading-relaxed max-w-md mx-auto">
+          Ask questions, get explanations, or just chat — in Hitesh&apos;s or Piyush&apos;s own voice.
         </p>
-      </motion.div>
+      </div>
 
-      {/* Grid Workspace */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start relative z-10 flex-1">
-        {/* Left Side: Selector and Bio Info */}
-        <div className="lg:col-span-5 flex flex-col gap-6 h-full justify-between">
-          <div className="space-y-4">
-            <h2 className="text-sm font-bold text-zinc-400 dark:text-zinc-500 font-mono uppercase tracking-wider">
-              Choose AI Mentor
+      {/* Workspace */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-start relative z-10 flex-1 px-4 sm:px-0 pb-4 sm:pb-0">
+        {/* Left: mentor picker — collapses above the chat on mobile */}
+        <div className="lg:col-span-4 flex flex-col gap-5 order-1">
+          <div className="space-y-3">
+            <h2 className="text-xs font-semibold text-text-muted font-mono uppercase tracking-wider">
+              Choose a mentor
             </h2>
             <PersonaPicker
               activePersona={activePersona}
@@ -150,14 +148,17 @@ export default function IndexPage() {
             />
           </div>
 
-          {/* Prompt/Sponsorship Tip */}
-          <div className="hidden lg:block p-4 rounded-xl border border-zinc-200/50 dark:border-zinc-800/50 bg-white/20 dark:bg-black/20 text-xs text-zinc-500 leading-relaxed font-mono">
-            <span className="font-semibold text-zinc-700 dark:text-zinc-300">SYSTEM NOTE:</span> Switching mentors preserves conversation history locally. Cookies manage context in 30-second sliding windows.
+          <div
+            className="hidden lg:block p-4 rounded-2xl border text-xs text-text-muted leading-relaxed"
+            style={{ borderColor: 'var(--border)' }}
+          >
+            <span className="font-medium text-text-primary">Note — </span>
+            switching mentors keeps each conversation separate and local to this session.
           </div>
         </div>
 
-        {/* Right Side: Chat Arena */}
-        <div className="lg:col-span-7">
+        {/* Right: chat */}
+        <div className="lg:col-span-8 order-2 -mx-4 sm:mx-0">
           <ChatPanel
             activePersonaId={activePersona}
             messages={chatHistories[activePersona]}
