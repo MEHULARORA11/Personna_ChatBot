@@ -419,7 +419,7 @@ export default function ChatPanel({
             onKeyDown={handleKeyDown}
             placeholder={isTyping ? 'Waiting for reply…' : `Message ${isHitesh ? 'Hitesh Sir' : 'Piyush Sir'}…`}
             disabled={isTyping}
-            className="flex-1 bg-transparent border-0 py-2 text-sm placeholder-text-muted focus:outline-none focus:ring-0 resize-none min-h-[24px] max-h-[200px] leading-relaxed"
+            className="flex-1 bg-transparent border-0 py-2 text-sm text-black placeholder-text-muted focus:outline-none focus:ring-0 resize-none min-h-[24px] max-h-[200px] leading-relaxed"
           />
 
           <button
