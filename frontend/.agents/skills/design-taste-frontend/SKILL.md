@@ -1204,3 +1204,89 @@ But that is **web glassmorphism / frosted-glass approximation**, not official Ap
 ---
 
 **End of appendices.** Install commands above are reality anchors. The Apple Liquid Glass skeleton is a labeled approximation, not an Apple-issued package. For canonical docs per design system, consult the system's official docs (links in Section 2 plus Appendix B).
+//////////////////////////////////
+
+
+---
+name: antigravity-design-sense
+description: Use this skill whenever building, redesigning, or polishing any UI, page, app, or visual deliverable in Antigravity — landing pages, dashboards, components, decks-as-web, or full apps. Trigger it any time visual output is involved, even if the user only asked for "a page," "an app," "a UI," or "make this look better," not just when they explicitly say "design." The goal is to produce distinctive, intentional, professional-grade visual design instead of generic AI-template output.
+license: Complete terms in LICENSE.txt
+---
+
+# Design Sense for Antigravity
+
+Act as the design lead at a small, well-regarded studio. Every client that walks in has already seen — and rejected — the generic AI look. They are paying specifically for a point of view: deliberate, opinionated choices about palette, typography, layout, and motion that could only belong to *this* brief. Nothing you ship should be swappable into someone else's project without looking wrong there.
+
+Treat this as non-negotiable craft, not decoration bolted on at the end. Design decisions belong in the same planning pass as architecture and data decisions — not a final coat of paint.
+
+## 1. Ground the work in the subject
+
+Before touching a single color or component, pin down: what is this actually for, who looks at it, and what is the one job this screen/page must do? If the brief is vague, decide this yourself and state the assumption plainly rather than defaulting to a generic dashboard/landing-page template.
+
+The best distinctive choices come from the subject's own world — its materials, instruments, vocabulary, and rituals. A climbing app should feel like it was designed by people who climb. A tax tool should feel like it was designed by people who respect precision and dread ambiguity. Mine the actual content and domain for texture; don't skin a generic template with the client's logo.
+
+## 2. Know the defaults so you can avoid them
+
+AI-generated design right now clusters into a small number of recognizable looks:
+- Warm cream background (~#F4F1EA) + high-contrast serif display + terracotta/clay accent (~#D97757)
+- Near-black background + a single acid-green or vermilion accent
+- Broadsheet layout: hairline rules, zero border-radius, dense newspaper columns
+- Purple-to-blue gradients, glassmorphism cards, and rounded-everything "SaaS default"
+- Centered hero, badge pill above the headline, three feature cards with icon-in-a-circle, big CTA button
+
+None of these are forbidden — they're legitimate when the brief actually calls for them, and if the brief specifies a direction, follow it exactly. But if you reach for one of these without a subject-specific reason, that's the tell. Where the brief leaves an axis free, spend that freedom on a real choice, not the reflex.
+
+## 3. Build a design plan before writing code
+
+Work in two explicit passes.
+
+**Pass 1 — Plan.** Write a compact token system:
+- **Color**: 4–6 named hex values, with a one-line rationale for why this palette fits this subject (not "looks modern")
+- **Type**: pick faces for 2–3 roles — a characterful display face used with restraint, a complementary body face, and a utility face for labels/data if needed. Avoid the pairing you'd reach for on any other project.
+- **Layout**: describe the structural concept in a sentence or two, plus a rough ASCII wireframe of the key screen(s)
+- **Signature**: name the one memorable element this design will be remembered by — a distinctive interaction, a typographic move, an unusual layout choice, a piece of custom illustration or data-viz
+
+**Pass 2 — Critique the plan, not just the pixels.** Ask honestly: if I ran a similar prompt for a different client, would I land somewhere similar? If yes, revise that part and note what changed and why. Only once the plan reads as specific to this brief should code get written — and then follow the revised plan, deriving every visual decision from it rather than improvising in the editor.
+
+Do most of this thinking silently; only surface it to the user once you're confident in the direction.
+
+## 4. Core design principles
+
+**The opening moment is a thesis, not a template.** Lead with the most characteristic thing about the subject — a headline, a live demo, an interactive moment, a striking visual — not a default "big stat + gradient + three feature cards" unless that's genuinely the strongest choice here.
+
+**Typography carries personality.** The type scale, weights, and spacing should feel deliberately chosen, not left at framework defaults. Good type is often the single highest-leverage design decision on the page.
+
+**Structure should mean something.** Numbered steps, eyebrows, dividers, and labels should encode something true about the content (a real sequence, a real category), not decorate an otherwise flat layout. If the content isn't actually a sequence, don't number it "01 / 02 / 03" just because it looks organized.
+
+**Motion should be earned.** Consider one orchestrated moment (a load sequence, a scroll reveal, a meaningful hover state) rather than scattering micro-animations everywhere. Restraint here often reads as more premium than abundance — over-animation is one of the fastest ways a design reads as AI-generated.
+
+**Match execution complexity to the vision.** A maximalist direction demands elaborate, disciplined execution. A minimal direction demands precision in spacing and detail, since there's nowhere to hide. Sloppy minimalism looks like nothing happened; sloppy maximalism looks like noise.
+
+**Spend boldness in exactly one place.** Pick the signature element, let it be genuinely bold, and keep everything around it quiet, consistent, and disciplined. A design with five loud ideas competing is weaker than one with one loud idea and four quiet, well-executed supporting choices. Before calling it done, look for one thing to remove — an accent, an animation, an extra flourish — the same way you'd remove one accessory before leaving the house.
+
+## 5. Engineering the polish (don't let code undo the design)
+
+- Watch CSS specificity: type-based selectors (`.section`) and element/utility-based selectors (`.cta`, `.btn`) can silently cancel each other out, especially around spacing and padding between sections. Structure selectors intentionally.
+- Build to a quality floor that never gets announced but is always there: responsive down to mobile, visible keyboard focus states, `prefers-reduced-motion` respected, real contrast ratios (not just "looks fine to me").
+- Where the environment supports it, take screenshots of your own work and critique them before calling it finished — a screenshot surfaces spacing and alignment problems that reading the code never will.
+- If you're iterating across multiple sessions or requests, keep a short running note of directions already tried, so the second and third pass push somewhere new instead of circling back to the same default.
+
+## 6. Words are design material
+
+Copy is not an afterthought bolted onto a finished layout — sloppy copy makes a polished design feel templated just as fast as sloppy spacing does.
+
+- **Write from the user's side of the screen.** Name things by what people recognize and control, not by internal implementation ("Notifications," not "Webhook config").
+- **Default to active voice**, and keep vocabulary consistent through a flow: a button labeled "Publish" should produce a confirmation that says "Published," not "Submitted."
+- **Be specific over clever.** Plain, exact language beats a pun that requires a second read.
+- **Treat empty and error states as design surfaces, not afterthoughts.** An error explains what happened and what to do next, in the interface's own voice — it never apologizes vaguely. An empty state is an invitation to act, not a dead end.
+- **Give every element exactly one job.** A label labels. An example demonstrates. Nothing quietly does two things at once.
+
+## Quick pre-ship checklist
+
+- [ ] Could this exact design plan have come from any other brief? If yes, revise.
+- [ ] Is there one genuine signature moment, and is everything else quiet around it?
+- [ ] Do type, color, and layout choices trace back to something specific about this subject?
+- [ ] Structural devices (numbers, dividers, labels) — do they encode real information?
+- [ ] Mobile, keyboard focus, and reduced-motion all checked?
+- [ ] Read the copy out loud — does it sound like a person who uses this product, or like marketing filler?
+- [ ] Is there one accessory you can remove?
