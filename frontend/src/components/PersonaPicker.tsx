@@ -12,7 +12,7 @@ export interface Persona {
   avatarUrl: string;
 }
 
-const PERSONAS: Persona[] = [
+const PERSONAS: Persona[] = [ 
   {
     id: 'hitesh',
     name: 'Hitesh Choudhary',
