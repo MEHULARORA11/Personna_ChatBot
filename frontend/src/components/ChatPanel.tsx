@@ -138,8 +138,9 @@ export default function ChatPanel({
   isTyping,
 }: ChatPanelProps) {
   const [inputVal, setInputVal] = useState('');
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const lastUserMessageRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const prevMessagesLengthRef = useRef(messages.length);
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const lastPersonaRef = useRef<'hitesh' | 'piyush'>(activePersonaId);
@@ -159,10 +160,22 @@ export default function ChatPanel({
     }
   }, [activePersonaId]);
 
-  // Auto-scroll to the bottom of the message container when a message is added or updated
+  // Scroll only when the USER sends a new message: bring it to the top of
+  // the view so the reply has room to stream in underneath it. We never
+  // auto-scroll for the assistant's replies (including while streaming) -
+  // that's left entirely to the user, so their scroll position is never
+  // hijacked mid-read.
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isTyping]);
+    const isNewMessage = messages.length > prevMessagesLengthRef.current;
+    prevMessagesLengthRef.current = messages.length;
+    const lastMsg = messages[messages.length - 1];
+
+    if (isNewMessage && lastMsg?.sender === 'user') {
+      requestAnimationFrame(() => {
+        lastUserMessageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+  }, [messages]);
 
   // Adjust textarea height automatically based on typing length
   useEffect(() => {
@@ -225,7 +238,7 @@ export default function ChatPanel({
 
   return (
     <div
-      className="flex flex-col h-[calc(100dvh-4rem)] sm:h-[680px] lg:h-[720px] sm:rounded-2xl sm:border sm:shadow-sm overflow-hidden relative bg-bg-surface"
+      className="flex flex-col h-[calc(100dvh-4rem)] sm:h-[540px] lg:h-[580px] sm:rounded-2xl sm:border sm:shadow-sm overflow-hidden relative bg-bg-surface"
       style={{ borderColor: 'var(--border)' }}
     >
       {/* Toast Notification */}
@@ -304,11 +317,14 @@ export default function ChatPanel({
         ) : (
           <div className="space-y-5">
             <AnimatePresence initial={false}>
-              {messages.map((msg) => {
+              {messages.map((msg, idx) => {
                 const isUser = msg.sender === 'user';
+                const isLastUserMessage =
+                  isUser && !messages.slice(idx + 1).some((m) => m.sender === 'user');
                 return (
                   <motion.div
                     key={msg.id}
+                    ref={isLastUserMessage ? lastUserMessageRef : undefined}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.2 }}
@@ -385,7 +401,6 @@ export default function ChatPanel({
             )}
           </div>
         )}
-        <div ref={messagesEndRef} />
       </div>
 
       {/* Input Bar */}
