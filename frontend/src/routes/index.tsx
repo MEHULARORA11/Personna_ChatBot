@@ -138,7 +138,7 @@ export default function IndexPage() {
         </div>
 
         {/* Chat Panel Wrapper */}
-        <div className="-mx-4 sm:mx-0 flex-1 min-h-0 mt-6">
+        <div className="-mx-4 sm:mx-0 flex-1 min-h-0 mt-3">
           <ChatPanel
             activePersonaId={activePersona}
             messages={chatHistories[activePersona]}
