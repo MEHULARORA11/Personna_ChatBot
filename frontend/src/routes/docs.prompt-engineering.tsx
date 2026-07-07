@@ -87,16 +87,16 @@ ex:-
         />
 
         {/* Prose and Structure */}
-        <div className="prose prose-zinc dark:prose-invert max-w-none text-sm md:text-base leading-relaxed space-y-4">
+        <div className="prose prose-zinc dark:prose-invert max-w-none text-[14px] sm:text-base leading-relaxed space-y-4">
           <p>
             The system prompts in the backend utilize a{' '}
-            <strong className="font-semibold text-zinc-900 dark:text-zinc-100">layered prompt architecture</strong>. Rather than running generic text instructions, the agents combine biography data, stylistic tone limits, tool protocols, and strict "avoid" rules to govern execution.
+            <strong className="font-semibold text-text-primary">layered prompt architecture</strong>. Rather than running generic text instructions, the agents combine biography data, stylistic tone limits, tool protocols, and strict "avoid" rules to govern execution.
           </p>
 
-          <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 font-display mt-6 mb-2">
+          <h2 className="text-xl font-bold text-text-primary font-display mt-8 mb-4 border-b border-border-main pb-2">
             Layered Prompt Hierarchy
           </h2>
-          <p>
+          <p className="text-text-muted">
             The instruction assembly flows through 4 distinct sections, starting from high-level context down to few-shot styles:
           </p>
         </div>
@@ -104,11 +104,11 @@ ex:-
         {/* Step Flow for Hierarchy */}
         <StepFlow steps={hierarchySteps} />
 
-        <div className="prose prose-zinc dark:prose-invert max-w-none text-sm md:text-base leading-relaxed space-y-4">
-          <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 font-display mt-6 mb-2">
+        <div className="prose prose-zinc dark:prose-invert max-w-none text-[14px] sm:text-base leading-relaxed space-y-4">
+          <h2 className="text-xl font-bold text-text-primary font-display mt-8 mb-4 border-b border-border-main pb-2">
             Guardrail Agent Validation (Pre-Check)
           </h2>
-          <p>
+          <p className="text-text-muted">
             Unlike simple keyword blocklists, the guardrails are driven by a dedicated, structured LLM agent configured in{' '}
             <SourceRef path="backend/src/agents/hitesh/instruction.ts" line={218} />.
             This agent evaluates user inputs before invoking the main agent, returning a strict Zod-structured JSON output schema:
@@ -121,9 +121,9 @@ ex:-
         </CodeBlock>
 
         {/* Allowed and Rejected Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 my-6">
           <Callout tone="success" title="Allowed Queries">
-            <ul className="list-disc list-inside text-xs mt-1 space-y-1">
+            <ul className="list-disc list-inside text-xs mt-1 space-y-1.5">
               <li>Weather reports & forecasts</li>
               <li>YouTube tutorial/video searches</li>
               <li>YouTube playlist queries</li>
@@ -133,7 +133,7 @@ ex:-
           </Callout>
 
           <Callout tone="danger" title="Rejected Queries (Blocked)">
-            <ul className="list-disc list-inside text-xs mt-1 space-y-1">
+            <ul className="list-disc list-inside text-xs mt-1 space-y-1.5">
               <li>Direct coding solutions / code blocks</li>
               <li>Data Structures & Algorithms (DSA) homework</li>
               <li>Essay or report writing</li>
@@ -143,11 +143,11 @@ ex:-
           </Callout>
         </div>
 
-        <div className="prose prose-zinc dark:prose-invert max-w-none text-sm md:text-base leading-relaxed space-y-4">
-          <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 font-display mt-6 mb-2">
+        <div className="prose prose-zinc dark:prose-invert max-w-none text-[14px] sm:text-base leading-relaxed space-y-4">
+          <h2 className="text-xl font-bold text-text-primary font-display mt-8 mb-4 border-b border-border-main pb-2">
             Few-shot Tone Humour Examples
           </h2>
-          <p>
+          <p className="text-text-muted">
             To maintain character authenticity under unusual or tricky queries, the instructions include specific humorous responses from actual streams. For instance:
           </p>
         </div>
@@ -157,22 +157,22 @@ ex:-
           {fewShotJson}
         </CodeBlock>
 
-        <div className="prose prose-zinc dark:prose-invert max-w-none text-sm md:text-base leading-relaxed space-y-4">
-          <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 font-display mt-6 mb-2">
+        <div className="prose prose-zinc dark:prose-invert max-w-none text-[14px] sm:text-base leading-relaxed space-y-4">
+          <h2 className="text-xl font-bold text-text-primary font-display mt-8 mb-4 border-b border-border-main pb-2">
             Sub-Tool Protocols & Action Order
           </h2>
-          <p>
+          <p className="text-text-muted">
             Both agents have access to internal tools (weather lookup, YouTube searching, and email dispatching). The prompt specifies a{' '}
-            <strong className="font-semibold text-zinc-900 dark:text-zinc-100">multi-tool workflow</strong> that coordinates tools sequentially:
+            <strong className="font-semibold text-text-primary">multi-tool workflow</strong> that coordinates tools sequentially:
           </p>
         </div>
 
         {/* Workflow steps */}
-        <div className="p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/30 dark:bg-zinc-900/10">
-          <p className="text-xs md:text-sm text-zinc-700 dark:text-zinc-300 font-mono mb-4">
+        <div className="p-5 sm:p-6 rounded-2xl border border-border-main bg-bg-surface shadow-sm">
+          <p className="text-xs md:text-sm text-text-primary font-mono mb-4">
             <strong>Example request:</strong> <em>"Send Piyush's Node.js playlists and Delhi weather to user@example.com"</em>
           </p>
-          <p className="text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest font-mono mb-2">
+          <p className="text-xs font-bold text-text-muted uppercase tracking-widest font-mono mb-2">
             Required Execution Flow:
           </p>
           <StepFlow steps={workflowSteps} />

@@ -76,17 +76,17 @@ SPEAKING PATTERNS:
         />
 
         {/* Concept */}
-        <div className="prose prose-zinc dark:prose-invert max-w-none text-sm md:text-base leading-relaxed space-y-4">
+        <div className="prose prose-zinc dark:prose-invert max-w-none text-[14px] sm:text-base leading-relaxed space-y-4">
           <p>
             Instead of using fine-tuned model weights (which are expensive to train and update), the agents are grounded using a{' '}
-            <strong className="font-semibold text-zinc-900 dark:text-zinc-100">biographical prompt engineering approach</strong>.
+            <strong className="font-semibold text-text-primary">biographical prompt engineering approach</strong>.
             Each persona's voice, experience, preferences, and signature quotes are explicitly defined in a system prompt module. This guarantees factual correctness (e.g. correct channel names and subscriber figures) while retaining personality alignment.
           </p>
 
-          <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 font-display mt-6 mb-2">
+          <h2 className="text-xl font-bold text-text-primary font-display mt-8 mb-4 border-b border-border-main pb-2">
             Persona Configurations
           </h2>
-          <p>
+          <p className="text-text-muted">
             The two main personalities in the system are configured through individual system prompt definitions.
             Below is a side-by-side breakdown of the profiles established in the backend codebase:
           </p>
@@ -99,7 +99,7 @@ SPEAKING PATTERNS:
             title="Hitesh Sir Persona Configuration"
             subtitle="backend/src/agents/hitesh/Persona.ts"
           >
-            <div className="text-xs text-zinc-600 dark:text-zinc-400 space-y-2">
+            <div className="text-xs text-text-muted space-y-2">
               <p>
                 Established as a veteran coding mentor, community builder, and tea lover. Teaches concepts with intuition first and uses encouraging language.
               </p>
@@ -119,7 +119,7 @@ SPEAKING PATTERNS:
             title="Piyush Sir Persona Configuration"
             subtitle="backend/src/agents/piyush/Persona.ts"
           >
-            <div className="text-xs text-zinc-600 dark:text-zinc-400 space-y-2">
+            <div className="text-xs text-text-muted space-y-2">
               <p>
                 Established as a high-energy software engineer, startup advisor, and system design enthusiast. Self-obsessed, unmarried, and highly opinionated about tech stacks.
               </p>
@@ -136,8 +136,8 @@ SPEAKING PATTERNS:
         </ComparisonGrid>
 
         {/* Tone Realism & Script Conversions */}
-        <div className="space-y-4">
-          <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 font-display">
+        <div className="space-y-4 pt-4">
+          <h2 className="text-xl font-bold text-text-primary font-display border-b border-border-main pb-2">
             Tone Realism & Script Conversions
           </h2>
           
@@ -147,7 +147,7 @@ SPEAKING PATTERNS:
             (e.g., writing "kaafi achha hai" instead of "काफ़ी अच्छा है"). This simulates a natural WhatsApp/live-chat messaging pattern commonly used in coding cohorts and online communication in the Indian developer community.
           </Callout>
 
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+          <p className="text-sm text-text-muted leading-relaxed">
             For code details, check the source file configs in{' '}
             <SourceRef path="backend/src/agents/hitesh/Persona.ts" /> and{' '}
             <SourceRef path="backend/src/agents/piyush/Persona.ts" />.

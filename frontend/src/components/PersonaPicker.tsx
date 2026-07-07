@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Play, Users, Coffee, Terminal } from 'lucide-react';
+import { Coffee, Terminal } from 'lucide-react';
 
 export interface Persona {
   id: 'hitesh' | 'piyush';
@@ -52,7 +52,7 @@ export default function PersonaPicker({ activePersona, onPersonaChange }: Person
             <button
               key={persona.id}
               onClick={() => onPersonaChange(persona.id)}
-              className={`text-left w-full p-5 rounded-2xl border transition-all duration-200 relative flex flex-col gap-3 cursor-pointer ${
+              className={`text-left w-full p-4 rounded-2xl border transition-all duration-200 relative flex items-center gap-3 cursor-pointer ${
                 isActive
                   ? 'bg-bg-surface border-transparent shadow-md'
                   : 'bg-transparent border-border-main hover:border-text-muted/40 hover:bg-bg-surface/50'
@@ -64,51 +64,36 @@ export default function PersonaPicker({ activePersona, onPersonaChange }: Person
               }
               aria-pressed={isActive}
             >
-              <div className="flex items-start gap-3.5">
-                <div className="relative shrink-0">
-                  <div
-                    className={`w-12 h-12 rounded-full overflow-hidden border transition-colors ${
-                      isActive ? 'border-transparent' : 'border-border-main'
-                    }`}
+              <div className="relative shrink-0">
+                <div
+                  className={`w-11 h-11 rounded-full overflow-hidden border transition-colors ${
+                    isActive ? 'border-transparent' : 'border-border-main'
+                  }`}
+                >
+                  <img
+                    src={persona.avatarUrl}
+                    alt={persona.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                {isActive && (
+                  <span
+                    className="absolute -bottom-0.5 -right-0.5 w-4.5 h-4.5 rounded-full border-2 flex items-center justify-center text-[8px]"
+                    style={{
+                      borderColor: 'var(--bg-surface)',
+                      backgroundColor: isHitesh ? 'var(--accent)' : 'var(--engine)',
+                    }}
                   >
-                    <img
-                      src={persona.avatarUrl}
-                      alt={persona.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  {isActive && (
-                    <span
-                      className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full border-2 flex items-center justify-center text-[8px]"
-                      style={{
-                        borderColor: 'var(--bg-surface)',
-                        backgroundColor: isHitesh ? 'var(--accent)' : 'var(--engine)',
-                      }}
-                    >
-                      {isHitesh ? <Coffee className="w-2.5 h-2.5 text-white" /> : <Terminal className="w-2.5 h-2.5 text-white" />}
-                    </span>
-                  )}
-                </div>
-                <div className="min-w-0">
-                  <h3 className="text-[15px] font-semibold text-text-primary flex items-center gap-1.5 font-display truncate">
-                    {persona.name}
-                    <span className="text-base">{persona.signatureEmoji}</span>
-                  </h3>
-                  <p className="text-xs text-text-muted mt-0.5">{persona.role}</p>
-                </div>
+                    {isHitesh ? <Coffee className="w-2.5 h-2.5 text-white" /> : <Terminal className="w-2.5 h-2.5 text-white" />}
+                  </span>
+                )}
               </div>
-
-              <p className="text-[13px] text-text-muted leading-relaxed">{persona.bio}</p>
-
-              <div className="flex items-center gap-4 text-[11px] font-mono text-text-muted pt-3 border-t border-border-main/70">
-                <span className="flex items-center gap-1">
-                  <Users className="w-3 h-3" />
-                  {persona.subscribers}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Play className="w-3 h-3 fill-current" />
-                  {persona.youtube}
-                </span>
+              <div className="min-w-0 flex-1">
+                <h3 className="text-[14px] font-semibold text-text-primary flex items-center gap-1.5 font-display truncate">
+                  {persona.name}
+                  <span className="text-sm">{persona.signatureEmoji}</span>
+                </h3>
+                <p className="text-[11px] text-text-muted mt-0.5 truncate">{persona.role}</p>
               </div>
             </button>
           );

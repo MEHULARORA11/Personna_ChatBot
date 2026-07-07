@@ -87,7 +87,7 @@ export async function sendChatMessage({
     }
     
     onComplete();
-  } catch (error:unknown) {
+  } catch (error: any) {
     console.error('Streaming request failed:', error);
     onError(error?.message || 'Hmm, that didn\'t go through — try rephrasing that.');
   }

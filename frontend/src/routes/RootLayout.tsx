@@ -12,7 +12,7 @@ export default function RootLayout() {
     <div className="flex flex-col min-h-dvh bg-bg-base text-text-primary transition-colors duration-300">
       {/* Top Navbar */}
       <header className="sticky top-0 z-50 border-b border-border-main/70 bg-bg-base/80 backdrop-blur-md">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* Logo / Brand */}
           <Link
             to="/"
@@ -100,7 +100,7 @@ export default function RootLayout() {
 
       {/* Main Content Area */}
       <main
-        className={`flex-1 w-full max-w-6xl mx-auto flex flex-col ${
+        className={`flex-1 w-full max-w-7xl mx-auto flex flex-col ${
           isChat ? 'px-0 sm:px-6 lg:px-8 py-0 sm:py-6' : 'px-4 sm:px-6 lg:px-8 py-6'
         }`}
       >
@@ -109,7 +109,7 @@ export default function RootLayout() {
 
       {/* Footer */}
       <footer className="hidden sm:block border-t border-border-main/70 py-5">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-3 text-xs font-mono text-text-muted">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-3 text-xs font-mono text-text-muted">
           <p>Personic &mdash; inspired by Hitesh Choudhary &amp; Piyush Garg</p>
           <div className="flex gap-4">
             <Link to="/" className="hover:text-text-primary transition-colors">Chat</Link>

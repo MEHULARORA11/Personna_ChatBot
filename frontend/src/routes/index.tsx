@@ -113,26 +113,10 @@ export default function IndexPage() {
       {/* Dynamic 3D WebGL background particle sphere (desktop only) */}
       <ThreeCanvas activePersona={activePersona} />
 
-      {/* Hero — hidden on mobile to give the chat full height */}
-      <div className="hidden sm:block text-center max-w-xl mx-auto mb-6 space-y-2 z-10 px-4">
-        <span
-          className="inline-block px-3 py-1 rounded-full border text-[11px] font-mono tracking-wider uppercase font-medium"
-          style={{ borderColor: 'var(--border)', color: 'var(--text-muted)' }}
-        >
-          AI Interview Series
-        </span>
-        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight font-display leading-tight">
-          Talk to your coding mentors
-        </h1>
-        <p className="text-sm text-text-muted leading-relaxed max-w-md mx-auto">
-          Ask questions, get explanations, or just chat — in Hitesh&apos;s or Piyush&apos;s own voice.
-        </p>
-      </div>
-
       {/* Workspace */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-start relative z-10 flex-1 px-4 sm:px-0 pb-4 sm:pb-0">
         {/* Left: mentor picker — collapses above the chat on mobile */}
-        <div className="lg:col-span-4 flex flex-col gap-5 order-1">
+        <div className="lg:col-span-3 flex flex-col gap-5 order-1">
           <div className="space-y-3">
             <h2 className="text-xs font-semibold text-text-muted font-mono uppercase tracking-wider">
               Choose a mentor
@@ -158,7 +142,23 @@ export default function IndexPage() {
         </div>
 
         {/* Right: chat */}
-        <div className="lg:col-span-8 order-2 -mx-4 sm:mx-0">
+        <div className="lg:col-span-9 order-2 -mx-4 sm:mx-0 flex flex-col gap-5">
+          {/* Hero — hidden on mobile to give the chat full height */}
+          <div className="hidden sm:block text-center max-w-xl mx-auto space-y-2 z-10 px-4">
+            <span
+              className="inline-block px-3 py-1 rounded-full border text-[11px] font-mono tracking-wider uppercase font-medium"
+              style={{ borderColor: 'var(--border)', color: 'var(--text-muted)' }}
+            >
+              AI Interview Series
+            </span>
+            <h1 className="text-3xl md:text-4xl font-semibold tracking-tight font-display leading-tight">
+              Talk to your coding mentors
+            </h1>
+            <p className="text-sm text-text-muted leading-relaxed max-w-md mx-auto">
+              Ask questions, get explanations, or just chat — in Hitesh&apos;s or Piyush&apos;s own voice.
+            </p>
+          </div>
+
           <ChatPanel
             activePersonaId={activePersona}
             messages={chatHistories[activePersona]}

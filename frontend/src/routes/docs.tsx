@@ -35,12 +35,12 @@ export default function DocsLayout() {
     <div className="flex-1 flex flex-col md:grid md:grid-cols-12 gap-6 md:gap-8">
       {/* Sidebar Navigation */}
       <aside className="md:col-span-3 flex flex-col gap-4">
-        <div className="p-4 rounded-2xl border" style={{ borderColor: 'var(--border)' }}>
-          <h2 className="text-sm font-semibold font-display flex items-center gap-2">
-            <BookOpen className="w-4 h-4 text-accent" />
+        <div className="px-4 py-2 select-none">
+          <h2 className="text-[11px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest font-mono flex items-center gap-2">
+            <BookOpen className="w-3.5 h-3.5 text-accent" />
             System Docs
           </h2>
-          <p className="text-[11px] text-text-muted font-mono mt-1">Persona ChatBot Architecture</p>
+          <p className="text-[10px] text-text-muted font-mono mt-1">ChatBot Architecture</p>
         </div>
 
         {/* Desktop Sidebar Links */}
@@ -52,9 +52,9 @@ export default function DocsLayout() {
                 key={item.path}
                 to={item.path}
                 activeOptions={{ exact: item.exact }}
-                activeProps={{ className: 'bg-accent/10 border-accent text-accent font-semibold' }}
-                inactiveProps={{ className: 'text-text-muted hover:text-text-primary border-transparent' }}
-                className="flex items-center gap-2.5 px-4 py-2.5 rounded-r-lg text-sm border-l-2 transition-colors duration-200"
+                activeProps={{ className: 'bg-accent/8 border-accent text-accent font-medium' }}
+                inactiveProps={{ className: 'text-text-muted hover:text-text-primary border-transparent hover:bg-bg-surface/30' }}
+                className="flex items-center gap-2.5 px-4 py-2 rounded-r-lg text-sm border-l-2 transition-all duration-200"
               >
                 <Icon className="w-4 h-4 flex-shrink-0" />
                 <span>{item.label}</span>
@@ -85,10 +85,7 @@ export default function DocsLayout() {
       </aside>
 
       {/* Main Reading Panel */}
-      <section
-        className="md:col-span-9 rounded-2xl p-5 sm:p-8 border"
-        style={{ borderColor: 'var(--border)', backgroundColor: 'var(--bg-surface)' }}
-      >
+      <section className="md:col-span-9 flex flex-col min-w-0">
         <Outlet />
       </section>
     </div>
