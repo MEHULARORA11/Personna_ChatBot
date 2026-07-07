@@ -114,14 +114,9 @@ export default function IndexPage() {
       <ThreeCanvas activePersona={activePersona} />
 
       {/* Workspace */}
-      <div className="max-w-4xl mx-auto w-full flex flex-col relative z-10 flex-1 min-h-0 px-4 sm:px-0 pb-4 sm:pb-6">
+      <div className="max-w-6xl mx-auto w-full flex flex-col relative z-10 flex-1 min-h-0 px-4 sm:px-0 pb-3 sm:pb-4">
         {/* Mentor selector horizontal strip */}
-        <div className="space-y-3 shrink-0">
-          <div className="flex items-center justify-center">
-            <h2 className="text-xs font-semibold text-text-muted font-mono uppercase tracking-wider text-center">
-              Choose a mentor
-            </h2>
-          </div>
+        <div className="mb-2 shrink-0">
           <PersonaPicker
             activePersona={activePersona}
             onPersonaChange={(id) => {
@@ -131,14 +126,10 @@ export default function IndexPage() {
               }
             }}
           />
-          <p className="hidden md:block text-[11px] text-text-muted leading-relaxed text-center">
-            <span className="font-medium text-text-primary">Note — </span>
-            switching mentors keeps each conversation separate and local to this session.
-          </p>
         </div>
 
         {/* Chat Panel Wrapper */}
-        <div className="-mx-4 sm:mx-0 flex-1 min-h-0 mt-3">
+        <div className="-mx-4 sm:mx-0 flex-1 min-h-0 mt-2">
           <ChatPanel
             activePersonaId={activePersona}
             messages={chatHistories[activePersona]}

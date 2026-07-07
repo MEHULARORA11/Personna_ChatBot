@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import { Coffee, Terminal } from 'lucide-react';
 
 export interface Persona {
   id: 'hitesh' | 'piyush';
@@ -42,9 +41,9 @@ interface PersonaPickerProps {
 
 export default function PersonaPicker({ activePersona, onPersonaChange }: PersonaPickerProps) {
   return (
-    <div className="w-full flex flex-col gap-3">
-      {/* Desktop / tablet: horizontal card grid */}
-      <div className="hidden md:grid grid-cols-2 gap-3 max-w-2xl w-full mx-auto">
+    <div className="w-full flex flex-col items-center">
+      {/* Desktop & Mobile: unified compact segmented control */}
+      <div className="flex gap-1 p-1 bg-bg-surface border border-border-main rounded-full max-w-sm w-full shadow-sm">
         {PERSONAS.map((persona) => {
           const isActive = activePersona === persona.id;
           const isHitesh = persona.id === 'hitesh';
@@ -52,79 +51,35 @@ export default function PersonaPicker({ activePersona, onPersonaChange }: Person
             <button
               key={persona.id}
               onClick={() => onPersonaChange(persona.id)}
-              className={`text-left w-full p-2.5 sm:p-3 rounded-xl border transition-all duration-200 relative flex items-center gap-3 cursor-pointer ${
-                isActive
-                  ? 'bg-bg-surface border-transparent shadow-md'
-                  : 'bg-transparent border-border-main hover:border-text-muted/40 hover:bg-bg-surface/50'
-              }`}
-              style={
-                isActive
-                  ? { boxShadow: `0 0 0 1.5px ${isHitesh ? 'var(--accent)' : 'var(--engine)'}` }
-                  : undefined
-              }
-              aria-pressed={isActive}
-            >
-              <div className="relative shrink-0">
-                <div
-                  className={`w-9.5 h-9.5 rounded-full overflow-hidden border transition-colors ${
-                    isActive ? 'border-transparent' : 'border-border-main'
-                  }`}
-                >
-                  <img
-                    src={persona.avatarUrl}
-                    alt={persona.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                {isActive && (
-                  <span
-                    className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full border flex items-center justify-center text-[9px]"
-                    style={{
-                      borderColor: 'var(--bg-surface)',
-                      backgroundColor: isHitesh ? 'var(--accent)' : 'var(--engine)',
-                    }}
-                  >
-                    {isHitesh ? <Coffee className="w-2.5 h-2.5 text-white" /> : <Terminal className="w-2.5 h-2.5 text-white" />}
-                  </span>
-                )}
-              </div>
-              <div className="min-w-0 flex-1">
-                <h3 className="text-sm sm:text-[14.5px] font-semibold text-text-primary flex items-center gap-1.5 font-display truncate">
-                  {persona.name}
-                  <span className="text-xs">{persona.signatureEmoji}</span>
-                </h3>
-                <p className="text-[11px] text-text-muted mt-0.5 truncate">{persona.role}</p>
-              </div>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Mobile: compact segmented switcher */}
-      <div className="md:hidden flex gap-1.5 p-1.5 bg-bg-surface border border-border-main rounded-2xl">
-        {PERSONAS.map((persona) => {
-          const isActive = activePersona === persona.id;
-          return (
-            <button
-              key={persona.id}
-              onClick={() => onPersonaChange(persona.id)}
-              className="flex-1 relative py-2.5 rounded-xl cursor-pointer"
+              className="flex-1 relative py-1.5 px-3 rounded-full cursor-pointer select-none border-0 focus:outline-none"
               aria-pressed={isActive}
             >
               {isActive && (
                 <motion.div
                   layoutId="activeTabIndicator"
-                  className="absolute inset-0 rounded-xl bg-bg-base border border-border-main"
+                  className="absolute inset-0 rounded-full bg-bg-base border"
+                  style={{
+                    borderColor: isHitesh ? 'var(--accent)' : 'var(--engine)',
+                  }}
                   transition={{ type: 'spring', stiffness: 400, damping: 32 }}
                 />
               )}
-              <span className="relative z-10 flex items-center justify-center gap-2">
-                <span className="w-6 h-6 rounded-full overflow-hidden border border-border-main shrink-0">
-                  <img src={persona.avatarUrl} alt={persona.name} className="w-full h-full object-cover" />
+              <span className="relative z-10 flex items-center justify-center gap-1.5">
+                <span className="w-5.5 h-5.5 rounded-full overflow-hidden border border-border-main shrink-0">
+                  <img
+                    src={persona.avatarUrl}
+                    alt={persona.name}
+                    className="w-full h-full object-cover"
+                  />
                 </span>
-                <span className={`text-sm font-medium font-display ${isActive ? 'text-text-primary' : 'text-text-muted'}`}>
-                  {persona.name.split(' ')[0]}
+                <span
+                  className={`text-[12.5px] font-semibold font-sans tracking-tight transition-colors duration-200 ${
+                    isActive ? 'text-text-primary' : 'text-text-muted hover:text-text-primary'
+                  }`}
+                >
+                  {persona.id === 'hitesh' ? 'Hitesh Sir' : 'Piyush Sir'}
                 </span>
+                <span className="text-xs shrink-0">{persona.signatureEmoji}</span>
               </span>
             </button>
           );

@@ -101,7 +101,7 @@ export default function RootLayout() {
       {/* Main Content Area */}
       <main
         className={`w-full max-w-7xl mx-auto flex flex-col ${
-          isChat ? 'flex-1 min-h-0 overflow-hidden px-0 sm:px-6 lg:px-8 py-0 sm:py-6' : 'flex-1 px-4 sm:px-6 lg:px-8 py-6'
+          isChat ? 'flex-1 min-h-0 overflow-hidden px-0 sm:px-6 lg:px-8 py-0 sm:py-4' : 'flex-1 px-4 sm:px-6 lg:px-8 py-6'
         }`}
       >
         <Outlet />
