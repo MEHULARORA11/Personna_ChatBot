@@ -138,9 +138,8 @@ export default function ChatPanel({
   isTyping,
 }: ChatPanelProps) {
   const [inputVal, setInputVal] = useState('');
-  const lastUserMessageRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const prevMessagesLengthRef = useRef(messages.length);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const lastPersonaRef = useRef<'hitesh' | 'piyush'>(activePersonaId);
@@ -160,22 +159,12 @@ export default function ChatPanel({
     }
   }, [activePersonaId]);
 
-  // Scroll only when the USER sends a new message: bring it to the top of
-  // the view so the reply has room to stream in underneath it. We never
-  // auto-scroll for the assistant's replies (including while streaming) -
-  // that's left entirely to the user, so their scroll position is never
-  // hijacked mid-read.
+  // Auto-scroll messages window to the bottom when messages or typing status updates
   useEffect(() => {
-    const isNewMessage = messages.length > prevMessagesLengthRef.current;
-    prevMessagesLengthRef.current = messages.length;
-    const lastMsg = messages[messages.length - 1];
-
-    if (isNewMessage && lastMsg?.sender === 'user') {
-      requestAnimationFrame(() => {
-        lastUserMessageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, isTyping]);
 
   // Adjust textarea height automatically based on typing length
   useEffect(() => {
@@ -295,7 +284,10 @@ export default function ChatPanel({
       </div>
 
       {/* Messages Window */}
-      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-5 sm:py-6 space-y-5">
+      <div
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto px-4 sm:px-6 py-5 sm:py-6 space-y-5"
+      >
         {messages.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center px-4 space-y-3 select-none">
             <div className="w-14 h-14 rounded-full overflow-hidden border-2 mb-1" style={{ borderColor: accentVar }}>
@@ -317,14 +309,11 @@ export default function ChatPanel({
         ) : (
           <div className="space-y-5">
             <AnimatePresence initial={false}>
-              {messages.map((msg, idx) => {
+              {messages.map((msg) => {
                 const isUser = msg.sender === 'user';
-                const isLastUserMessage =
-                  isUser && !messages.slice(idx + 1).some((m) => m.sender === 'user');
                 return (
                   <motion.div
                     key={msg.id}
-                    ref={isLastUserMessage ? lastUserMessageRef : undefined}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.2 }}
