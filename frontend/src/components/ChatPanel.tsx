@@ -238,7 +238,7 @@ export default function ChatPanel({
 
   return (
     <div
-      className="flex flex-col h-[calc(100dvh-4rem)] sm:h-[540px] lg:h-[580px] sm:rounded-2xl sm:border sm:shadow-sm overflow-hidden relative bg-bg-surface"
+      className="flex flex-col h-full min-h-0 sm:rounded-2xl sm:border sm:shadow-sm overflow-hidden relative bg-bg-surface"
       style={{ borderColor: 'var(--border)' }}
     >
       {/* Toast Notification */}

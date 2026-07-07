@@ -109,56 +109,36 @@ export default function IndexPage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col relative">
+    <div className="h-full flex flex-col min-h-0 relative">
       {/* Dynamic 3D WebGL background particle sphere (desktop only) */}
       <ThreeCanvas activePersona={activePersona} />
 
       {/* Workspace */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-start relative z-10 flex-1 px-4 sm:px-0 pb-4 sm:pb-0">
-        {/* Left: mentor picker — collapses above the chat on mobile */}
-        <div className="lg:col-span-3 flex flex-col gap-5 order-1">
-          <div className="space-y-3">
-            <h2 className="text-xs font-semibold text-text-muted font-mono uppercase tracking-wider">
+      <div className="max-w-4xl mx-auto w-full flex flex-col relative z-10 flex-1 min-h-0 px-4 sm:px-0 pb-4 sm:pb-6">
+        {/* Mentor selector horizontal strip */}
+        <div className="space-y-3 shrink-0">
+          <div className="flex items-center justify-center">
+            <h2 className="text-xs font-semibold text-text-muted font-mono uppercase tracking-wider text-center">
               Choose a mentor
             </h2>
-            <PersonaPicker
-              activePersona={activePersona}
-              onPersonaChange={(id) => {
-                // Switching does NOT trigger a network request. It swaps the chat screen instantly.
-                if (!isTyping) {
-                  setActivePersona(id);
-                }
-              }}
-            />
           </div>
-
-          <div
-            className="hidden lg:block p-4 rounded-2xl border text-xs text-text-muted leading-relaxed"
-            style={{ borderColor: 'var(--border)' }}
-          >
+          <PersonaPicker
+            activePersona={activePersona}
+            onPersonaChange={(id) => {
+              // Switching does NOT trigger a network request. It swaps the chat screen instantly.
+              if (!isTyping) {
+                setActivePersona(id);
+              }
+            }}
+          />
+          <p className="hidden md:block text-[11px] text-text-muted leading-relaxed text-center">
             <span className="font-medium text-text-primary">Note — </span>
             switching mentors keeps each conversation separate and local to this session.
-          </div>
+          </p>
         </div>
 
-        {/* Right: chat */}
-        <div className="lg:col-span-9 order-2 -mx-4 sm:mx-0 flex flex-col gap-5">
-          {/* Hero — hidden on mobile to give the chat full height */}
-          <div className="hidden sm:block text-center max-w-xl mx-auto space-y-2 z-10 px-4">
-            <span
-              className="inline-block px-3 py-1 rounded-full border text-[11px] font-mono tracking-wider uppercase font-medium"
-              style={{ borderColor: 'var(--border)', color: 'var(--text-muted)' }}
-            >
-              AI Interview Series
-            </span>
-            <h1 className="text-3xl md:text-4xl font-semibold tracking-tight font-display leading-tight">
-              Talk to your coding mentors
-            </h1>
-            <p className="text-sm text-text-muted leading-relaxed max-w-md mx-auto">
-              Ask questions, get explanations, or just chat — in Hitesh&apos;s or Piyush&apos;s own voice.
-            </p>
-          </div>
-
+        {/* Chat Panel Wrapper */}
+        <div className="-mx-4 sm:mx-0 flex-1 min-h-0 mt-6">
           <ChatPanel
             activePersonaId={activePersona}
             messages={chatHistories[activePersona]}

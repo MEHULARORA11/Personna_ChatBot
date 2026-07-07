@@ -1,4 +1,3 @@
-import { Coffee, Terminal } from 'lucide-react';
 
 export default function SvgDiagram() {
   return (

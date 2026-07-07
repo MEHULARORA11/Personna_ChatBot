@@ -1,4 +1,3 @@
-import { Coffee, Terminal } from 'lucide-react';
 import { motion } from 'framer-motion';
 import DocHeader from '../components/docs/DocHeader';
 import DocsPagerFooter from '../components/docs/DocsPagerFooter';
