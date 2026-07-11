@@ -138,8 +138,10 @@ export default function ChatPanel({
   isTyping,
 }: ChatPanelProps) {
   const [inputVal, setInputVal] = useState('');
+  const [isInputEnabled, setIsInputEnabled] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const inputWrapperRef = useRef<HTMLDivElement>(null);
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const lastPersonaRef = useRef<'hitesh' | 'piyush'>(activePersonaId);
@@ -174,6 +176,34 @@ export default function ChatPanel({
     }
   }, [inputVal]);
 
+
+  useEffect(() => {
+    const handleGlobalKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== '/') return;
+      const target = event.target as HTMLElement | null;
+      if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target?.isContentEditable) return;
+      event.preventDefault();
+      if (!isTyping) {
+        setIsInputEnabled(true);
+        requestAnimationFrame(() => textareaRef.current?.focus());
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, [isTyping]);
+
+  useEffect(() => {
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!inputWrapperRef.current) return;
+      if (!inputWrapperRef.current.contains(event.target as Node)) {
+        setIsInputEnabled(false);
+        textareaRef.current?.blur();
+      }
+    };
+    document.addEventListener('pointerdown', handlePointerDown);
+    return () => document.removeEventListener('pointerdown', handlePointerDown);
+  }, []);
+
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     const messageText = inputVal.trim();
@@ -186,6 +216,7 @@ export default function ChatPanel({
     setInputVal('');
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
+      textareaRef.current.focus();
     }
 
     // Call API helper for streaming
@@ -317,7 +348,8 @@ export default function ChatPanel({
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.2 }}
-                    className={`flex items-end gap-2.5 ${isUser ? 'justify-end' : 'justify-start'}`}
+                    ref={inputWrapperRef}
+          className={`flex items-end gap-2.5 ${isUser ? 'justify-end' : 'justify-start'}`}
                   >
                     {!isUser && (
                       <div className="w-7 h-7 rounded-full overflow-hidden border shrink-0" style={{ borderColor: 'var(--border)' }}>
@@ -422,7 +454,7 @@ export default function ChatPanel({
             onChange={(e) => setInputVal(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={isTyping ? 'Waiting for reply…' : `Message ${isHitesh ? 'Hitesh Sir' : 'Piyush Sir'}…`}
-            disabled={isTyping}
+            disabled={!isInputEnabled}
             className="flex-1 bg-transparent border-0 py-2 text-sm text-text-primary placeholder-text-muted focus:outline-none focus:ring-0 resize-none min-h-[24px] max-h-[200px] leading-relaxed"
           />
 
