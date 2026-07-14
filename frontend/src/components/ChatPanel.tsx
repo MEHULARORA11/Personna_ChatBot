@@ -348,8 +348,7 @@ export default function ChatPanel({
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.2 }}
-                    ref={inputWrapperRef}
-          className={`flex items-end gap-2.5 ${isUser ? 'justify-end' : 'justify-start'}`}
+                    className={`flex items-end gap-2.5 ${isUser ? 'justify-end' : 'justify-start'}`}
                   >
                     {!isUser && (
                       <div className="w-7 h-7 rounded-full overflow-hidden border shrink-0" style={{ borderColor: 'var(--border)' }}>
@@ -431,6 +430,11 @@ export default function ChatPanel({
         style={{ borderColor: 'var(--border)' }}
       >
         <div
+          ref={inputWrapperRef}
+          onClick={() => {
+            setIsInputEnabled(true);
+            textareaRef.current?.focus();
+          }}
           className={`flex items-end gap-2 rounded-2xl border p-2 pl-3.5 transition-shadow duration-200 focus-within:ring-2 ${
             isHitesh ? 'focus-within:ring-accent/30' : 'focus-within:ring-engine/30'
           }`}
