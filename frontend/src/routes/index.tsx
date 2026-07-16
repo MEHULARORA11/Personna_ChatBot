@@ -67,14 +67,25 @@ export default function IndexPage() {
     setIsTyping(false);
   };
 
-  const handleStreamError = (_errorMsg: string) => {
+  const handleStreamError = (errorMsg: string) => {
     setIsTyping(false);
 
-    // Custom error message based on active persona
-    const customErrorMsg =
-      activePersona === 'hitesh'
-        ? 'nahin ji , ye ye sab nahin chalega yaha par, ye sawaal restricted hain'
-        : 'are bhai, ye sab mat karo, ye saare sawaal allowed nahin hain .';
+    let customErrorMsg = '';
+
+    if (
+      errorMsg.includes('are bhai pehele valid key use karo') ||
+      errorMsg.includes('429') ||
+      errorMsg.includes('quota') ||
+      errorMsg.includes('rate limit') ||
+      errorMsg.includes('API key')
+    ) {
+      customErrorMsg = 'are bhai pehele valid key use karo phir baat karenge .';
+    } else {
+      customErrorMsg =
+        activePersona === 'hitesh'
+          ? 'nahin ji , ye sab nahin chalega yaha par, ye sawaal restricted hain'
+          : 'are bhai, ye sab mat karo, ye saare sawaal allowed nahin hain .';
+    }
 
     setChatHistories((prev) => {
       const history = [...prev[activePersona]];

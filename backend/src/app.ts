@@ -84,6 +84,7 @@ app.get('/',(req:Request,res:Response) => {
 })
 
 app.post('/api/post',async (req:Request,res:Response) => {
+  try {
     // console.log(CLIENT_BASE_URL)
 
     const {message,persona} = req.body
@@ -101,7 +102,7 @@ app.post('/api/post',async (req:Request,res:Response) => {
                 res.cookie("hiteshAgentId_1",id,{
                     httpOnly:true,
                     sameSite:'lax',
-                    secure:true,
+                    secure:false,
                     maxAge: 30 * 1000 // 30 second
                })
 
@@ -127,7 +128,7 @@ app.post('/api/post',async (req:Request,res:Response) => {
                     res.cookie("piyushAgentId_1",id,{
                     httpOnly:true,
                     sameSite:'lax',
-                    secure:true,
+                    secure:false,
                     maxAge: 30 * 1000 // 30 second
                })
 
@@ -145,7 +146,17 @@ app.post('/api/post',async (req:Request,res:Response) => {
                 res,personaId_1,message)
             }
            }
-
+  } catch (error: any) {
+    console.error("API POST error:", error);
+    const errorMsg = error?.message || '';
+    const status = error?.status || error?.statusCode || error?.response?.status;
+    
+    if (status === 429 || status === 401 || errorMsg.includes('429') || errorMsg.includes('quota') || errorMsg.includes('billing') || errorMsg.includes('limit') || errorMsg.includes('API key')) {
+      res.status(429).send("are bhai pehele valid key use karo phir baat karenge .");
+      return;
+    }
+    res.status(500).send(errorMsg || "Internal Server Error");
+  }
 })
 
 export default app;
