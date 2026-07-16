@@ -215,17 +215,16 @@ async function isSafe(message:string){
 
 export async function isAbusive(userPrompt:string){
    
+const sanitizedPrompt = userPrompt.replace(/\bgarg\b/gi, '');
+
 const isNonEnglish = containsNonEnglish(userPrompt)
 
-const text  = normalizeText(userPrompt)
+const text  = normalizeText(sanitizedPrompt)
 
 const isSafeMessage = await isSafe(userPrompt);
 
-
 const abusiveNormalized =   containsAbuse(text)
-const abusive =   containsAbuse(userPrompt)
-
-
+const abusive =   containsAbuse(sanitizedPrompt)
 
 if(!isSafeMessage || abusiveNormalized || abusive || isNonEnglish){
   return true
