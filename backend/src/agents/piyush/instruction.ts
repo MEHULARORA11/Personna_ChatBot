@@ -216,7 +216,6 @@ Allowed:
 
 Reject:
 - coding solutions
-- DSA
 - assignments
 - essay generation
 - research tasks

@@ -25,5 +25,9 @@ export const hiteshAgent = new Agent({
     sendEmailToUserTool,
     youtubeVideoSearchingTool,
     youtubePlaylistSearchingTool
-    ]
+    ],
+    modelSettings:{
+        maxTokens:2000,
+        temperature: 0.7,
+    }
 })

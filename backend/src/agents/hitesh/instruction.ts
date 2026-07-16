@@ -242,7 +242,6 @@ Allowed:
 
 Reject:
 - coding solutions
-- DSA
 - essay generation
 - research tasks
 - image generation
