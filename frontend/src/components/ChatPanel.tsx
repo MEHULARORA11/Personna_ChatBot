@@ -86,6 +86,93 @@ const MarkdownComponents = {
     return <h3 className="text-sm font-semibold mt-2 mb-1 font-display">{children}</h3>;
   },
   a({ href, children }: any) {
+    const isYouTube = href && (href.includes('youtube.com') || href.includes('youtu.be'));
+    if (isYouTube) {
+      let embedUrl = '';
+      if (href.includes('youtube.com/watch')) {
+        try {
+          const urlObj = new URL(href);
+          const videoId = urlObj.searchParams.get('v');
+          if (videoId) {
+            embedUrl = `https://www.youtube.com/embed/${videoId}`;
+          }
+        } catch (e) {
+          const match = href.match(/[?&]v=([^&#]+)/);
+          if (match) {
+            embedUrl = `https://www.youtube.com/embed/${match[1]}`;
+          }
+        }
+      } else if (href.includes('youtube.com/playlist')) {
+        try {
+          const urlObj = new URL(href);
+          const playlistId = urlObj.searchParams.get('list');
+          if (playlistId) {
+            return (
+              <div className="my-3 flex justify-center w-full">
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3.5 px-4 py-3 rounded-xl border transition-all no-underline shadow-sm w-full max-w-[640px] hover:translate-y-[-1px] active:translate-y-0 duration-150"
+                  style={{
+                    borderColor: 'var(--border)',
+                    backgroundColor: 'var(--bg-surface)',
+                    color: 'var(--text-primary)',
+                  }}
+                >
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 bg-red-500/10 text-red-500">
+                    <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                      <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z" />
+                    </svg>
+                  </div>
+                  <div className="min-w-0 flex-1 text-left">
+                    <p className="text-sm font-semibold truncate leading-snug">
+                      {children || 'YouTube Playlist'}
+                    </p>
+                    <p className="text-xs text-text-muted mt-1 leading-none">
+                      Click to open playlist in new tab &bull; YouTube
+                    </p>
+                  </div>
+                </a>
+              </div>
+            );
+          }
+        } catch (e) {
+          // Fallback below
+        }
+      } else if (href.includes('youtu.be/')) {
+        const parts = href.split('youtu.be/');
+        const videoId = parts[parts.length - 1]?.split(/[?#]/)[0];
+        if (videoId) {
+          embedUrl = `https://www.youtube.com/embed/${videoId}`;
+        }
+      } else if (href.includes('youtube.com/embed/')) {
+        embedUrl = href;
+      }
+
+      if (embedUrl) {
+        return (
+          <div className="my-3 flex justify-center w-full">
+            <iframe
+              width="100%"
+              style={{
+                aspectRatio: '16/9',
+                maxWidth: '640px',
+                borderRadius: '12px',
+                border: '1px solid var(--border)',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+              }}
+              src={embedUrl}
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+          </div>
+        );
+      }
+    }
+
     return (
       <a
         href={href}
