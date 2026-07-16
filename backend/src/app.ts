@@ -102,7 +102,7 @@ app.post('/api/post',async (req:Request,res:Response) => {
                 res.cookie("hiteshAgentId_1",id,{
                     httpOnly:true,
                     sameSite:'lax',
-                    secure:false,
+                    secure:true,
                     maxAge: 30 * 1000 // 30 second
                })
 
@@ -128,7 +128,7 @@ app.post('/api/post',async (req:Request,res:Response) => {
                     res.cookie("piyushAgentId_1",id,{
                     httpOnly:true,
                     sameSite:'lax',
-                    secure:false,
+                    secure:true,
                     maxAge: 30 * 1000 // 30 second
                })
 
