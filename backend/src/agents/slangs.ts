@@ -1,13 +1,10 @@
 import dotenv from 'dotenv'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { OpenAI } from 'openai'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 dotenv.config({ path: resolve(__dirname, '../../../.env') })
-
-import {OpenAI} from 'openai'
-
-const client = new OpenAI()
 
 const abusivePatterns = [
   /b[i1][t+]?ch[e3]r[s$]?/i,
@@ -101,7 +98,6 @@ const abusivePatterns = [
 
   /[t+]w[a@][t+][s$]?/i,
 
-   
   /\bmc\b/i,
   /\bbc\b/i,
   /m+a+d+[ae]r+c+h?[o0]*d+/i,
@@ -109,11 +105,9 @@ const abusivePatterns = [
   /b+h+[ae]n+c+h?[o0]*d+/i,
   /b+[ae]h+n+c+h?[o0]*d+/i,
 
-
   /b+h+[oa]?[s\$]*d+k/i,
   /b+[ae]h+n+k+[ae]?\s*l+[o0]*d+[ae]/i,
   /bsdk/i,
-
 
   /c+h+u+t+[i1y]+[ae]/i,
   /c+h+u+t+/i,
@@ -122,112 +116,97 @@ const abusivePatterns = [
   /g+[ae]n+d+/i,
   /g+a+a+n+d+/i,
 
-  
   /l+u+n+d+/i,
   /l+o+d+[uua]*/i,
 
-
   /r+a+n+d+[i1]/i,
   /r+a+n+d/i,
-  /r+a+n+d/i,
-
 
   /h+a+r+a+m+[i1]/i,
   /haram/i,
 
-  
   /k+a+m+[i1]n+[aey]+/i,
 
-  
   /chod/i,
 
-  
   /k+u+t+t+[ae]/i,
   /k+a+m+[i1]n+a+/i,
 
-  
   /m+a+a+\s*k+[i1]/i,
   /t+e+r+[i1]\s*m+a+a+/i,
 
-  
   /b+[ae]h+n+\s*k+e+\s*l+[o0]*d+e+/i,
 
   /b+e+t+[i1]+c+h?[o0]*d+/i,
 
-  
   /b+a+k+c+h?[o0]*d+/i,
 
-  
   /l+[ae]v+d+e+/i,
   /l+a+w+d+e+/i,
 
   /j+h+a+t+u+/i,
 
-  
   /b+h+[o0]+s+d+[i1]k+e+/i,
 
-  
   /c+h+u+\*/i,
 
-  
   /m+u+t+h+/i,
   /t+a+t+t+e+/i,
   /c+h+a+k+k+e+/i,
   /h+i+j+r+a+/i
-];
+]
 
-function normalizeText(text:string) {
+function normalizeText(text: string) {
   return text
     .toLowerCase()
-
-    
     .replace(/[@4]/g, "a")
     .replace(/[3]/g, "e")
     .replace(/[1!|]/g, "i")
     .replace(/[0]/g, "o")
     .replace(/[$5]/g, "s")
     .replace(/[7]/g, "t")
-
-    // remove spaces/symbols
     .replace(/[^a-z0-9]/gi, "")
-
-    // collapse repeated chars
-    .replace(/(.)\1+/g, "$1");
+    .replace(/(.)\1+/g, "$1")
 }
 
-function containsAbuse(text:string) {
-  return abusivePatterns.some((pattern) => pattern.test(text));
+function containsAbuse(text: string) {
+  return abusivePatterns.some((pattern) => pattern.test(text))
 }
 
-function containsNonEnglish(text:string) {
-  return /[^\x00-\x7F]/.test(text);
+function containsNonEnglish(text: string) {
+  return /[^\x00-\x7F]/.test(text)
 }
 
-
-async function isSafe(message:string){
-  const moderation = await client.moderations.create({
-    model:"omni-moderation-latest",
-    input:message
-  })
-
-  return !moderation?.results[0]?.flagged
+async function isSafe(message: string, apiKey?: string) {
+  const effectiveKey = (apiKey || process.env.OPENAI_API_KEY || '').trim()
+  if (!effectiveKey) {
+    return true
+  }
+  try {
+    const client = new OpenAI({ apiKey: effectiveKey })
+    const moderation = await client.moderations.create({
+      model: "omni-moderation-latest",
+      input: message,
+    })
+    return !moderation?.results[0]?.flagged
+  } catch (err: any) {
+    console.warn("Moderation API check skipped due to error:", err?.message || err)
+    return true
+  }
 }
 
-export async function isAbusive(userPrompt:string){
-   
-const sanitizedPrompt = userPrompt.replace(/\bgarg\b/gi, '');
+export async function isAbusive(userPrompt: string, apiKey?: string) {
+  const sanitizedPrompt = userPrompt.replace(/\bgarg\b/gi, '')
+  const isNonEnglish = containsNonEnglish(userPrompt)
+  const text = normalizeText(sanitizedPrompt)
 
-const isNonEnglish = containsNonEnglish(userPrompt)
+  const isSafeMessage = await isSafe(userPrompt, apiKey)
 
-const text  = normalizeText(sanitizedPrompt)
+  const abusiveNormalized = containsAbuse(text)
+  const abusive = containsAbuse(sanitizedPrompt)
 
-const isSafeMessage = await isSafe(userPrompt);
-
-const abusiveNormalized =   containsAbuse(text)
-const abusive =   containsAbuse(sanitizedPrompt)
-
-if(!isSafeMessage || abusiveNormalized || abusive || isNonEnglish){
-  return true
-}
-return false
+  if (!isSafeMessage || abusiveNormalized || abusive || isNonEnglish) {
+    return true
+  }
+  return false
 }
