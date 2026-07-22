@@ -1,6 +1,7 @@
 import { Outlet, Link, useRouterState } from '@tanstack/react-router';
 import { useState } from 'react';
 import ThemeToggle from '../components/ThemeToggle';
+import ByokControl from '../components/ByokControl';
 import { FileText, MessageSquare, Menu, X } from 'lucide-react';
 
 export default function RootLayout() {
@@ -33,7 +34,7 @@ export default function RootLayout() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden sm:flex items-center gap-1">
+          <nav className="hidden sm:flex items-center gap-2">
             <Link
               to="/"
               activeProps={{ className: 'text-text-primary bg-bg-surface border-border-main shadow-sm' }}
@@ -52,12 +53,14 @@ export default function RootLayout() {
               <FileText className="w-3.5 h-3.5" />
               <span>Docs</span>
             </Link>
-            <div className="h-6 w-px bg-border-main mx-2" />
+            <div className="h-6 w-px bg-border-main mx-1" />
+            <ByokControl />
             <ThemeToggle />
           </nav>
 
           {/* Mobile controls */}
           <div className="flex sm:hidden items-center gap-2">
+            <ByokControl />
             <ThemeToggle />
             <button
               type="button"
