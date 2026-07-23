@@ -118,7 +118,7 @@ async function main(
       role: "user",
       content: userInput,
     },
-  ], { maxTurns: 3 })
+  ], { maxTurns: 10 })
 
   if (!guardRailResponse?.finalOutput?.isValidQuery) {
     throw new Error(`Invalid Querry , due to Reason => ${guardRailResponse?.finalOutput?.reason}`)
