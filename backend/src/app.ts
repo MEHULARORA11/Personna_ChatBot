@@ -89,22 +89,11 @@ function scopeAgentToUserKey<T extends Agent<any, any>>(agent: T, apiKey: string
   }) as T
 }
 
-async function getConverstaionId(apiKey?: string): Promise<string> {
-  const effectiveKey = getEffectiveApiKey(apiKey)
-  if (!effectiveKey) {
-    throw new Error('NO_API_KEY: No OpenAI API key provided. Please save your API key using the BYOK button in the header.')
-  }
-  const c = new OpenAI({ apiKey: effectiveKey })
-  const { id } = await c.conversations.create({})
-  return id
-}
-
 async function main(
   personiqAgent: Agent,
   guardRailAgent: Agent<any, any>,
   SYSTEM: string,
   res: Response,
-  id: string,
   userInput: string,
   userApiKey: string | undefined,
 ) {
@@ -118,7 +107,7 @@ async function main(
       role: "user",
       content: userInput,
     },
-  ], { maxTurns: 10 })
+  ], { maxTurns: 3 })
 
   if (!guardRailResponse?.finalOutput?.isValidQuery) {
     throw new Error(`Invalid Querry , due to Reason => ${guardRailResponse?.finalOutput?.reason}`)
@@ -127,6 +116,15 @@ async function main(
   // The main agent can chain multiple tools in one request (e.g. video search +
   // playlist search + weather + email). Each tool call consumes a turn, so the
   // SDK default of 10 is too low for complex multi-step workflows.
+  //
+  // NOTE: conversationId is intentionally NOT passed here. getConversationId()
+  // used c.conversations.create({}) which is the OpenAI Responses API (stateful,
+  // server-side). But agents are cloned with OpenAIChatCompletionsModel (Chat
+  // Completions, stateless). Mixing the two causes "messages with role 'tool'
+  // must be a response to a preceding message with 'tool_calls'" 400 errors
+  // whenever the server restarts (Render free tier) and the SDK's in-memory
+  // state for the old conversationId is gone. Each request is now stateless,
+  // which is exactly what Chat Completions already is.
   const response = await run(scopedAgent, [
     {
       role: "system",
@@ -138,7 +136,6 @@ async function main(
     },
   ], {
     stream: true,
-    conversationId: id,
     maxTurns: 25,
   })
 
@@ -214,54 +211,22 @@ app.post('/api/post', async (req: Request, res: Response) => {
     if (!message || !persona) {
       throw new Error('invalid message or persona')
     }
-    let personaId_1 = null
     switch (persona) {
       case "hitesh": {
-        personaId_1 = req.cookies?.hiteshAgentId_1
         const guardRail = getHiteshGuardRailAgent(userApiKey)
-        if (!personaId_1) {
-          const id = await getConverstaionId(userApiKey)
-          res.cookie("hiteshAgentId_1", id, {
-            httpOnly: true,
-            ...crossSiteCookieOpts,
-            maxAge: 30 * 1000,
-          })
-
-          return await main(
-            hiteshAgent,
-            guardRail,
-            HITESH_SIR_SYSTEM_PROMPT,
-            res, id, message, userApiKey)
-        }
-
         return await main(
           hiteshAgent,
           guardRail,
           HITESH_SIR_SYSTEM_PROMPT,
-          res, personaId_1, message, userApiKey)
+          res, message, userApiKey)
       }
       case "piyush": {
-        personaId_1 = req.cookies?.piyushAgentId_1
         const guardRail = getPiyushGuardRailAgent(userApiKey)
-        if (!personaId_1) {
-          const id = await getConverstaionId(userApiKey)
-          res.cookie("piyushAgentId_1", id, {
-            httpOnly: true,
-            ...crossSiteCookieOpts,
-            maxAge: 30 * 1000,
-          })
-
-          return await main(
-            piyushAgent,
-            guardRail,
-            PIYUSH_SIR_SYSTEM_PROMPT,
-            res, id, message, userApiKey)
-        }
         return await main(
           piyushAgent,
           guardRail,
           PIYUSH_SIR_SYSTEM_PROMPT,
-          res, personaId_1, message, userApiKey)
+          res, message, userApiKey)
       }
     }
   } catch (error: any) {
