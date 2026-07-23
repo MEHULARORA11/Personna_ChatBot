@@ -28,6 +28,16 @@ const BYOK_COOKIE = 'personic_byok_key'
 const BYOK_FLAG_COOKIE = 'personic_byok_active'
 const TEN_YEARS_MS = 10 * 365 * 24 * 60 * 60 * 1000
 
+// In production the frontend and backend are on different domains (cross-site),
+// so cookies must use SameSite=None; Secure to be sent with cross-site requests.
+// In development both run on localhost so SameSite=Lax is fine (and Secure would
+// break non-HTTPS local servers).
+const isProd = process.env.NODE_ENV === 'production'
+const crossSiteCookieOpts = {
+  secure: isProd,
+  sameSite: (isProd ? 'none' : 'lax') as 'none' | 'lax',
+}
+
 const byokRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 10,
@@ -47,11 +57,13 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
+    // Allow server-to-server requests (no Origin header)
     if (!origin) return callback(null, true)
-    if (allowedOrigins.includes(origin) || allowedOrigins.includes(origin.replace(/\/$/, ''))) {
+    const normalised = origin.replace(/\/$/, '')
+    if (allowedOrigins.includes(origin) || allowedOrigins.includes(normalised)) {
       return callback(null, true)
     }
-    return callback(null, true)
+    return callback(new Error('Not allowed by CORS'))
   },
   credentials: true,
 }))
@@ -99,17 +111,22 @@ async function main(
   const scopedGuardRail = scopeAgentToUserKey(guardRailAgent, userApiKey)
   const scopedAgent = scopeAgentToUserKey(personiqAgent, userApiKey)
 
+  // Guardrail only needs 1 tool call (isSafeQuery) + structured output turn.
+  // Cap at 3 to fail fast if something loops unexpectedly.
   const guardRailResponse = await run(scopedGuardRail, [
     {
       role: "user",
       content: userInput,
     },
-  ])
+  ], { maxTurns: 3 })
 
   if (!guardRailResponse?.finalOutput?.isValidQuery) {
     throw new Error(`Invalid Querry , due to Reason => ${guardRailResponse?.finalOutput?.reason}`)
   }
 
+  // The main agent can chain multiple tools in one request (e.g. video search +
+  // playlist search + weather + email). Each tool call consumes a turn, so the
+  // SDK default of 10 is too low for complex multi-step workflows.
   const response = await run(scopedAgent, [
     {
       role: "system",
@@ -122,6 +139,7 @@ async function main(
   ], {
     stream: true,
     conversationId: id,
+    maxTurns: 25,
   })
 
   const streamOutput = response.toTextStream()
@@ -162,8 +180,7 @@ app.post('/api/byok', byokRateLimiter, async (req: Request, res: Response) => {
 
   const cookieOpts = {
     httpOnly: true,
-    secure: true,
-    sameSite: 'lax' as const,
+    ...crossSiteCookieOpts,
     maxAge: TEN_YEARS_MS,
     path: '/',
   }
@@ -175,10 +192,11 @@ app.post('/api/byok', byokRateLimiter, async (req: Request, res: Response) => {
 })
 
 app.post('/api/deletekey', byokRateLimiter, (req: Request, res: Response) => {
+  // clearCookie must use the exact same path/secure/sameSite that were used
+  // when the cookie was originally set, otherwise browsers silently ignore it.
   const clearOpts = {
     httpOnly: true,
-    secure: true,
-    sameSite: 'lax' as const,
+    ...crossSiteCookieOpts,
     path: '/',
   }
   res.clearCookie(BYOK_COOKIE, clearOpts)
@@ -205,8 +223,7 @@ app.post('/api/post', async (req: Request, res: Response) => {
           const id = await getConverstaionId(userApiKey)
           res.cookie("hiteshAgentId_1", id, {
             httpOnly: true,
-            sameSite: 'lax',
-            secure: true,
+            ...crossSiteCookieOpts,
             maxAge: 30 * 1000,
           })
 
@@ -230,8 +247,7 @@ app.post('/api/post', async (req: Request, res: Response) => {
           const id = await getConverstaionId(userApiKey)
           res.cookie("piyushAgentId_1", id, {
             httpOnly: true,
-            sameSite: 'lax',
-            secure: true,
+            ...crossSiteCookieOpts,
             maxAge: 30 * 1000,
           })
 

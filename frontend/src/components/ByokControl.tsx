@@ -13,18 +13,13 @@ export default function ByokControl() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
-    const hasActiveFlag = typeof document !== 'undefined' && document.cookie.includes('personic_byok_active=1');
-    if (hasActiveFlag) {
-      setStatus('saved');
-    }
+    // Do not rely on document.cookie here: in production the backend is on a
+    // different domain, so its HttpOnly cookies are never visible to JS on the
+    // frontend origin. Use /api/byok/status as the sole source of truth.
     fetch(`${API_BASE_URL}/api/byok/status`, { credentials: 'include' })
       .then((res) => res.json())
       .then((data) => {
-        if (data.hasKey) {
-          setStatus('saved');
-        } else {
-          setStatus('idle');
-        }
+        setStatus(data.hasKey ? 'saved' : 'idle');
       })
       .catch(() => {});
   }, []);
