@@ -165,8 +165,9 @@ function normalizeText(text: string) {
     .replace(/[0]/g, "o")
     .replace(/[$5]/g, "s")
     .replace(/[7]/g, "t")
-    .replace(/[^a-z0-9]/gi, "")
-    .replace(/(.)\1+/g, "$1")
+    .replace(/[^a-z0-9\s]/gi, " ") // Keep spaces to prevent word merging!
+    .replace(/\s+/g, " ")         // Collapse multiple spaces into one
+    .trim()
 }
 
 function containsAbuse(text: string) {
@@ -203,22 +204,33 @@ function stripEmails(text: string) {
   return text.replace(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/g, '')
 }
 
+// Deduplicate repeated letters per-word, not across the whole sentence
+function removeDuplicateLetters(text: string) {
+  return text
+    .split(" ")
+    .map(word => word.replace(/(.)\1+/g, "$1"))
+    .join(" ")
+}
+
 export async function isAbusive(userPrompt: string, apiKey?: string) {
-  // Step 1: strip emails to prevent false positives in all downstream checks
+  // Step 1: Strip emails
   const promptWithoutEmails = stripEmails(userPrompt)
   const sanitizedPrompt = promptWithoutEmails.replace(/\bgarg\b/gi, '')
-  const text = normalizeText(sanitizedPrompt)
+  
+  // Step 2: Normalize while maintaining word separation
+  const normalizedWithSpaces = normalizeText(sanitizedPrompt)
+  const normalizedDeduplicated = removeDuplicateLetters(normalizedWithSpaces)
 
-  // Step 2: regex patterns are definitive — if they match, it is abusive
-  if (containsAbuse(text) || containsAbuse(sanitizedPrompt)) {
+  // Step 3: Check regex patterns on space-preserved versions
+  if (
+    containsAbuse(sanitizedPrompt) || 
+    containsAbuse(normalizedWithSpaces) || 
+    containsAbuse(normalizedDeduplicated)
+  ) {
     return true
   }
 
-  // Step 3: for non-English / non-ASCII content (where regex coverage is weaker),
-  // additionally consult the OpenAI moderation API.
-  // We intentionally do NOT rely on the moderation API alone for English content
-  // because it can produce false positives on innocent messages that contain
-  // email addresses, teacher names, or YouTube-related vocabulary.
+  // Step 4: Fallback to moderation API for non-English content
   const isNonEnglish = containsNonEnglish(promptWithoutEmails)
   if (isNonEnglish) {
     const isSafeMessage = await isSafe(promptWithoutEmails, apiKey)
@@ -227,4 +239,3 @@ export async function isAbusive(userPrompt: string, apiKey?: string) {
 
   return false
 }
-
