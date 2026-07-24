@@ -195,12 +195,23 @@ async function isSafe(message: string, apiKey?: string) {
   }
 }
 
+// Strip email addresses before moderation/pattern checks to avoid false positives.
+// Email addresses (e.g. user@gmail.com) contain characters like '@', digits, and
+// domain parts that can accidentally match abusive regex patterns after normalisation.
+function stripEmails(text: string) {
+  return text.replace(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/g, '')
+}
+
 export async function isAbusive(userPrompt: string, apiKey?: string) {
-  const sanitizedPrompt = userPrompt.replace(/\bgarg\b/gi, '')
-  const isNonEnglish = containsNonEnglish(userPrompt)
+  // Remove email addresses before any check to prevent false positives
+  const promptWithoutEmails = stripEmails(userPrompt)
+
+  const sanitizedPrompt = promptWithoutEmails.replace(/\bgarg\b/gi, '')
+  const isNonEnglish = containsNonEnglish(promptWithoutEmails)
   const text = normalizeText(sanitizedPrompt)
 
-  const isSafeMessage = await isSafe(userPrompt, apiKey)
+  // Also pass email-stripped message to the OpenAI moderation API
+  const isSafeMessage = await isSafe(promptWithoutEmails, apiKey)
 
   const abusiveNormalized = containsAbuse(text)
   const abusive = containsAbuse(sanitizedPrompt)
