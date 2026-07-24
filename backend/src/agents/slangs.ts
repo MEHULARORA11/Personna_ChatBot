@@ -195,29 +195,36 @@ async function isSafe(message: string, apiKey?: string) {
   }
 }
 
-// Strip email addresses before moderation/pattern checks to avoid false positives.
-// Email addresses (e.g. user@gmail.com) contain characters like '@', digits, and
-// domain parts that can accidentally match abusive regex patterns after normalisation.
+// Strip email addresses before all checks to prevent false positives.
+// Email addresses (e.g. user@gmail.com) contain '@', digits, and domain parts
+// that can accidentally match abusive regex patterns after normalisation, and can
+// also confuse the OpenAI moderation API into producing false positives.
 function stripEmails(text: string) {
   return text.replace(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/g, '')
 }
 
 export async function isAbusive(userPrompt: string, apiKey?: string) {
-  // Remove email addresses before any check to prevent false positives
+  // Step 1: strip emails to prevent false positives in all downstream checks
   const promptWithoutEmails = stripEmails(userPrompt)
-
   const sanitizedPrompt = promptWithoutEmails.replace(/\bgarg\b/gi, '')
-  const isNonEnglish = containsNonEnglish(promptWithoutEmails)
   const text = normalizeText(sanitizedPrompt)
 
-  // Also pass email-stripped message to the OpenAI moderation API
-  const isSafeMessage = await isSafe(promptWithoutEmails, apiKey)
-
-  const abusiveNormalized = containsAbuse(text)
-  const abusive = containsAbuse(sanitizedPrompt)
-
-  if (!isSafeMessage || abusiveNormalized || abusive || isNonEnglish) {
+  // Step 2: regex patterns are definitive — if they match, it is abusive
+  if (containsAbuse(text) || containsAbuse(sanitizedPrompt)) {
     return true
   }
+
+  // Step 3: for non-English / non-ASCII content (where regex coverage is weaker),
+  // additionally consult the OpenAI moderation API.
+  // We intentionally do NOT rely on the moderation API alone for English content
+  // because it can produce false positives on innocent messages that contain
+  // email addresses, teacher names, or YouTube-related vocabulary.
+  const isNonEnglish = containsNonEnglish(promptWithoutEmails)
+  if (isNonEnglish) {
+    const isSafeMessage = await isSafe(promptWithoutEmails, apiKey)
+    if (!isSafeMessage) return true
+  }
+
   return false
 }
+
